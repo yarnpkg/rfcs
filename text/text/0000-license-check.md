@@ -16,7 +16,7 @@ Yarn has `yarn licenses ls`. It would also be useful to know if certain packages
 don't satify your license (or other similar files) requirements rather than just a list of them.
 
 ```bash
-$ yarn licesnes check
+$ yarn licenses check
 yarn licenses v0.14.0
 Disallowed Licenses
 ├─ a-pkg@1.0.3
