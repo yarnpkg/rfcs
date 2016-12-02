@@ -48,14 +48,6 @@ criteria (speedup, better browser support)
    - Additions only likely to be _noticed by_ other implementors-of-Yarn,
 invisible to users-of-Yarn.
 
-## Gathering feedback before submitting
-
-It's often helpful to get feedback on your concept before diving into the
-level of API design detail required for an RFC. **You may open an
-issue on this repo to start a high-level discussion**, with the goal of
-eventually formulating an RFC pull request with the specific implementation
-design.
-
 ## What the process is
 
 In short, to get a major feature added to Yarn, one usually first gets
