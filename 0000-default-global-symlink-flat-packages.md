@@ -1,5 +1,5 @@
-
-- Start Date: (fill me in with today's date, YYYY-MM-DD)
+2017
+- Start Date: (fill me in with today's date, 2017-01-17)
 - RFC PR: (leave this empty)
 - Yarn Issue: (leave this empty)
 
