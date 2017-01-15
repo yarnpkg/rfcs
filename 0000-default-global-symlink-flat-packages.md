@@ -20,19 +20,19 @@ Also, there is not an efficient way of avoiding node_modules tree hierarchy hell
 # Detailed design
 
 ## Avoid Name collision using namespaces in Semver Extend packages and store as tar balls (gz, zip) all packages using the following format
-*@angular-core-2.3.1-beta-@lic-BSD-checksum
-*@angular-core-2.3.1-beta-@lic-LGPL-checksum
-*@angular-core-2.3.1-beta-@lic-BSD-@fork-@yarn-1.0.0-@lic-COMM-checksum
+* @angular-core-2.3.1-beta.internal1-lic-BSD-checksum.tar.gz
+* @angular-core-2.3.1-beta.internal1-lic-LGPL-checksum.tar.gz
+* @yarn-angular-core-1.0.0-@lic-COMM-checksum.tar.gz (This created because yarn customized angular-core in its own fork and it is being used
 
 ##Deep Fork
-*Specify deep forks, aka fork from another fork need not be represented in the file name of tar ball. Instead, that must be represented in package.json
+* Specify deep forks, aka fork from another fork need not be represented in the file name of tar ball. Instead, that must be represented in package.json
 
 
 ## Build using linking and bundling tar ball
-*Create a tarball of vendor-bundle.js, vendor-dev-bundle.js and vendor-bundle-package.json with @yarn-vendor-tarball-checksum.tz
-*In project's package.json - keep the same with semver extension added.
-*When building the project, if the vendor-bundle-package.json and vendor packages required from project's package.json are same then don't do any further build.
-
+* Create a tarball of vendor-bundle.js, vendor-dev-bundle.js and vendor-bundle-package.json with @yarn-yarn-vendor-tarball-checksum.tar.gz
+* In project's package.json - keep the same with semver extension added.
+* When building the project, if the vendor-bundle-package.json and vendor packages required from project's package.json are same then don't do any further build.
+* Create a node_modules link folder to the tar ball file or extracted node_modules folder
 
 # How We Teach This
 
@@ -42,13 +42,16 @@ Yarn is an improvement and an extension of how we install node_modules by provid
 
 Build Time increases initially but that will be greatly negated by subsequent build of the same project or a different project or when creating new project within the same computer
 
-Adds complexity to build and generate tar ball files
+Adds complexity to build time
+
+Create a node_modules link folder to the tar bal file
 
 # Alternatives
 None
 
 # Unresolved questions
+None
 
 Optional, but suggested for first drafts. What parts of the design are still
 TBD?
-Finalizing a semver extension format to represent forks and eventually name tar ball files
+None.
