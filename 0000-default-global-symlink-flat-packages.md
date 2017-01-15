@@ -1,3 +1,4 @@
+
 - Start Date: (fill me in with today's date, YYYY-MM-DD)
 - RFC PR: (leave this empty)
 - Yarn Issue: (leave this empty)
@@ -33,6 +34,8 @@ Also, there is not an efficient way of avoiding node_modules tree hierarchy hell
 * In project's package.json - keep the same with semver extension added.
 * When building the project, if the vendor-bundle-package.json and vendor packages required from project's package.json are same then don't do any further build.
 * Create a node_modules link folder to the tar ball file or extracted node_modules folder
+
+## Option to remove version collision if required, if not enable the use of multiple nested vendor bundles used within a vendor bundle
 
 # How We Teach This
 
