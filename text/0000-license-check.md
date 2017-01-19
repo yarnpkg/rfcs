@@ -1,6 +1,6 @@
 - Start Date: 2016-10-12
-- RFC PR: 
-- Yarn Issue: 
+- RFC PR: (leave this empty)
+- Yarn Issue: (leave this empty)
 
 # Summary
 
