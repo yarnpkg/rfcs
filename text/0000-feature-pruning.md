@@ -222,3 +222,6 @@ Should `yarn prune` without arguments or flags continue to recommend
 
 Should regular dependencies always be retained, even if the `--prod` flag is not
 provided?
+
+Should we add an `--exclude` switch for install, which would install all 
+dependencies except for the ones declared in the named feature?
