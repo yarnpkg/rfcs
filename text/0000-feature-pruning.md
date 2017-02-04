@@ -68,7 +68,7 @@ correspond to flags passed to `yarn prune`.  The values associated with those
 keys are always lists, consisting of either objects or strings.  If passed a
 string, it must be one of the following: a key in the `dependencies`,
 `devDependencies`, `peerDependencies` or `optionalDependencies`; the name of
-another key in the `features` hash; or one of `dependencies`,
+another key in the `features` hash; or one of the strings `dependencies`,
 `devDependencies`, `peerDependencies` or `optionalDependencies`.  If the
 name of a dependency is provided, that dependency is a member of the feature; if
 the name of a feature is provided, all dependencies in that feature are included
