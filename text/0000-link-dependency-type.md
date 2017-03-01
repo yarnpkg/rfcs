@@ -29,15 +29,12 @@ prefix handling using simple symlinks, that tackled our need.
 I would love to be able to switch theses project to yarn but I would need a way
 to create these links.
 
+npm is also considering to add the same `link:` specifier, see this [recent RFC](https://github.com/npm/npm/pull/15900).
+
 # Detailed design
 
-I can see two (non exclusive) ways to achieve that:
-
-- Either add a new `link:` prefix that would just create symlinks and that's it
+We Add a new `link:` specifier that would just create symlinks and that's it
   (regardless of destination's existence)
-
-- Add an option flag `--link-file-dependencies` that would override default
-  `file:` handling (copying) and use symlinks instead.
 
 I've already implemented the changes in yarn's [pr#1109](https://github.com/yarnpkg/yarn/pull/1109) and I'm
 currently maintaining a fork since my team already rely on this for several
