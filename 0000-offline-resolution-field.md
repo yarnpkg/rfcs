@@ -8,6 +8,8 @@ When enabling the offline mirror, Yarn updates the lockfile by stripping the reg
 
 Related issues: https://github.com/yarnpkg/yarn/issues/393 / https://github.com/yarnpkg/yarn/issues/394
 
+Tentative implementation: https://github.com/yarnpkg/yarn/pull/2970/
+
 # Motivation
 
 Yarn currently has two different type of values for the lockfile `resolved` fields:
@@ -24,50 +26,16 @@ Because of these reasons, it would be best for the `resolved` field to contain t
 
 I suggest the following:
 
-  - Removing the `${source}` part of the `resolved` field
-
-    - **Rational: Why removing the source part of the resolved field?**
-  
-      The source is redundant, and misleading:
-      
-        - If we change our registry URL, the package itself will not have changed. The lockfile should not be modified.
-        
-        - The source is already in the package.json file - we can use it when we need to, since we will have checked by then that the resolved version still match (when working with a registry). Worst case scenario (direct link) we will catch that the file will have changed when checking the hash - but that's not something we could have avoided with storing the source in the lockfile anyway.
-
-  - (Optional) Splitting the resulting `resolved` field into two others: `hash` (the hash of the tarballs) and `tarball` (the tarball name).
-
-  - Adding the hash to the tarball name. This is to prevent issues where two projects are being worked on at the same time, both with the same dependency `foobar`, except that one of those projects is using the development branch of `foobar` (possibly fetching the project directly from git). In such a case, both projects lockfile would resolve to the same dependency name, the same dependency version (because maintainers don't usually bump version number until the release), but different hashes.
-
-  - When installing a registry package that is specified in the lockfile but not present in the offline cache:
-
-    - (Offline) We just throw.
-
-    - (Online) We first check to see if the resolved version matches the package.json semver range. If it does, we download the package tarball that belongs to this specific version, validate it against the resolved hash, store it inside the offline cache, and use it to setup the dependency. If it doesn't, we can proceed as we currently do, updating the lockfile in the process to point to the new correct version.
-
-  - When installing a non-registry (ie. git, direct url, etc) package that is specified in the lockfile but not present in the offline cache:
-
-    - (Offline) We just throw
-
-    - (Online) We should fetch the direct tarball (possibly by cloning and tarballing the referenced repository when working with git), and check that the hash matches the one in the lockfile. If it does, we can just store the tarball inside the offline cache, and use it to setup the dependency. If it doesn't, we can proceed as we currently do, updating the lockfile in the process to point to the new correct version.
+  - Adding the `${source}` part to the `resolved` field even when offline
 
 # Drawbacks
 
-It won't be possible to run `yarn install` and expect everything to work if the following conditions are met:
-
-  - The package is only stored on a private registry, and not on the regular one
-
-  - The user hasn't set the right private registry in Yarn
-
-In such a case, we won't have access to the resolved registry location anymore, so we won't be able to query it directly. We will try to load the package from the regular registry, which will fail because it won't exist there.
+Nothing should break. More iterations will be required to address the other issues raised in the previous iterations of this document.
 
 # How We Teach This
 
-This change is quite transparent, since it's unlikely the users will ever want to update the yarn.lock file manually. I feel like this behaviour is relatively intuitive: we first look into the lockfile, then into the package.json, and construct the cache without further interaction with the user.
+This change is quite transparent, since it's unlikely the users will ever want to update the yarn.lock file manually.
 
 # Alternatives
 
-  - Instead of removing the package registry, we could add it on every resolution, even when offline. See above for why I think it would be a bad idea.
-
-# Unresolved questions
-
-An important question is the backward compatibility. The easiest way would probably be to strip the "resolved" fields while we read the yarn.lock file if we notice that they contain a registry URL. It would only require a minimal amount of legacy support codepath.
+  - Instead of adding the package registry to each `resolved` field, we could remove it instead.
