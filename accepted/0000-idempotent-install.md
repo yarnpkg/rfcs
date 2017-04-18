@@ -1,6 +1,6 @@
 - Start Date: 2016-12-13
-- RFC PR: (leave this empty)
-- Yarn Issue: (leave this empty)
+- RFC PR: https://github.com/yarnpkg/rfcs/pull/37
+- Yarn Issue: https://github.com/yarnpkg/yarn/issues/2241
 
 # Summary
 
@@ -27,7 +27,7 @@ Assuming both a `package.json` and `yarn.lock` in the project's root...
 **Path B: (`node_modules` installed w/ node@X, node@Y)**
 
 - **Current, non-ideal**: `yarn install` => binaries for node@X
-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Ideal**: `yarn install` => binaries for **node@Y**
+- **Ideal**: `yarn install` => binaries for **node@Y**
 
 
 # How We Teach This

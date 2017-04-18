@@ -1,6 +1,6 @@
-- Start Date: (fill me in with today's date, YYYY-MM-DD)
-- RFC PR: (leave this empty)
-- Yarn Issue: (leave this empty)
+- Start Date: 28 Feb 2017
+- RFC PR: https://github.com/yarnpkg/rfcs/pull/51
+- Implementation: https://github.com/yarnpkg/yarn/pull/2970
 
 # Summary
 
@@ -15,7 +15,7 @@ Tentative implementation: https://github.com/yarnpkg/yarn/pull/2970/
 Yarn currently has two different type of values for the lockfile `resolved` fields:
 
   - When online, they're in the form `${source}/${name}-${version}.tar.gz#${hash}`
-  
+
   - But when offline, they're instead `${name}-${version}.tar.gz#${hash}`
 
 The current reasoning (or at least side effect) seems to be that it allows the fetch process to refuse installing things from the network when running under the `--offline` switch (and to always fetch things from the network otherwise instead of looking into the offline mirror). Unfortunately, such a separation also makes it harder to switch between working with a remote registry and an offline repository (for example, dev environments might not need the offline repository, but under the current design they can't do without).
