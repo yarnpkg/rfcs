@@ -1,6 +1,5 @@
 - Start Date: (1-10-17)
-- RFC PR: (leave this empty)
-- Yarn Issue: (leave this empty)
+- RFC PR: https://github.com/yarnpkg/rfcs/pull/40
 
 # Summary
 
@@ -40,14 +39,14 @@ as well.
 # Drawbacks
 
 As with any new code, it's new code. Adding it expands the amount of functionality
-that yarn now supports. That's the largest drawback I can think of. 
+that yarn now supports. That's the largest drawback I can think of.
 
 # Alternatives
 
 I considered a --registry flag for the yarn publish command. This would likely accomplish the
-same functionality but is prone to error as most hand typed things are. 
+same functionality but is prone to error as most hand typed things are.
 
 # Unresolved questions
 
 I'm a relative newbie to yarn, so my design might be too simplistic or not accounting
-for things I just don't know about. 
+for things I just don't know about.

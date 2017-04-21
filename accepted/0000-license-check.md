@@ -1,6 +1,6 @@
 - Start Date: 2016-10-12
-- RFC PR: (leave this empty)
-- Yarn Issue: (leave this empty)
+- RFC PR: https://github.com/yarnpkg/rfcs/pull/7
+- Yarn Issue: https://github.com/yarnpkg/yarn/issues/904
 
 # Summary
 
