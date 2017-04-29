@@ -3,7 +3,7 @@
 - Yarn Issue: (leave this empty)
 
 # Summary
-Yarn’s CLI should support an option that plays alert sounds for completion, warnings, and errors.
+Add an option to the CLI that turns on alert sounds for Yarn completion, warning, and error events.
 
 # Motivation
 In short, this RFC is motivated by situations such as this:
