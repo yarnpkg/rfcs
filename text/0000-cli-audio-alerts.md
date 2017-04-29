@@ -89,4 +89,4 @@ These alternatives are not mutually exclusive with this RFC. They may deserve th
 **TBD**: Hierarchial/numeric alert levels
 
 # Unanswered questions
-See Alternatives subsections. Also: Progress-event alerts?
+See Alternatives subsections. Also: Progress-event alerts? Is it actually impossible to output both JSON and console reporting in parallel without reimplementing `ConsoleReporter`?
