@@ -57,7 +57,7 @@ This RFC introduces new terms—“alerts” and “alert types”. It also make
 # Drawbacks
 Deferring audio alerts to separate projects (see Alternatives) would keep Yarn’s core cleaner. Building audio alerts into Yarn has the following disadvantages:
 
-1. More dependencies (e.g., play-sound, baudio) would have to be added to Yarn.
+1. More dependencies (e.g., [play-sound](https://www.npmjs.com/package/play-sound), [baudio](https://www.npmjs.com/package/baudio) would have to be added to Yarn.
 2. Additional code would have to be added to Yarn.
 3. First-time users would have one more setting to worry about.
 4. If MP3 files are used (instead of procedurally generated waveforms), those MP3 files may moderately increase Yarn’s size. Depending on the library chosen for their playback, they may also bring in codec-license complications.
@@ -83,7 +83,7 @@ One third alternative would be to instead add a new command to Yarn—call it `y
 These alternatives are not mutually exclusive with this RFC. They may deserve their own parallel RFCs. However, implementing any of them would make this RFC unnecessary in a strict sense, though perhaps not in an end-user, ergonomic sense.
 
 ## Alternatives in sound types and playback methods
-**TBD**: play-audio vs. baudio vs. etc.
+**TBD**: [play-sound](https://www.npmjs.com/package/play-sound) vs. [baudio](https://www.npmjs.com/package/baudio) vs. etc.
 
 ## Alternatives in CLI options
 **TBD**: Hierarchial/numeric alert levels
