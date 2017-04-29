@@ -92,12 +92,7 @@ One third alternative would be to instead add a new command to Yarn—call it `y
 These alternatives are not mutually exclusive with this RFC. They may deserve their own parallel RFCs. However, implementing any of them would make this RFC unnecessary in a strict sense, though perhaps not in an end-user, ergonomic sense.
 
 ## Alternatives in sound types and playback methods
-TBD
+**TBD**: play-audio vs. baudio vs. etc.
 
 ## Alternatives in CLI options
-Hierarchial/numeric alert levels? TBD
-
-# Unresolved questions
-
-Optional, but suggested for first drafts. What parts of the design are still
-TBD?
+**TBD**: Hierarchial/numeric alert levels
