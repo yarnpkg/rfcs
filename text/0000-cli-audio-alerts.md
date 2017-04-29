@@ -37,11 +37,11 @@ During development, Yarn often runs as a background process, hidden away in anot
 
 Visual or aural feedback when a build succeeds or when an error occurs solves this problem, and many build systems provide affordances for them. Gulp, for instance, uses Node streams to capture error events, allowing packages like [gulp-notify](https://www.npmjs.com/package/gulp-notify) to play sound alerts when errors occur. In the world of Clojure, the Boot build system even has a similar `notify` task built in and already configured.
 
-The Yarn team should consider building audio alerts into Yarn for usability. One might think of them like emoji ✨  for your ears.
+The Yarn team should consider building audio alerts into Yarn for usability.
+One might think of them like emoji ✨  for your ears.
 
 # Detailed design
-
-`yarn` would support a new flag, `--alert [types]`, for all its commands. This flag would modify Yarn’s reporting such that, when its command finishes, it would emit sounds when certain events (finishing, warnings, and errors) occur.
+`yarn` would support a ew flag, `-a, --alert [types]`, for all its commands. This flag would modify Yarn’s reporting such that, when its command finishes, it would emit sounds when certain events (finishing, warnings, and errors) occur.
 
 `[types]` would be a space-delimited unordered list of zero to three of: `finished`, `warning`, and `error`. By default, `--alert` includes all three levels. For instance:
 
@@ -52,16 +52,7 @@ The Yarn team should consider building audio alerts into Yarn for usability. One
 Depending on the team’s preferences, the sounds may either be MP3 files included in Yarn or synthetic sounds procedurally generated from code.
 
 # How We Teach This
-
-What names and terminology work best for these concepts and why? How is this
-idea best presented? As a continuation of existing npm patterns, existing Yarn
-patterns, or as a wholly new one?
-
-Would the acceptance of this proposal mean the Yarn documentation must be
-re-organized or altered? Does it change how Yarn is taught to new users
-at any level?
-
-How should this feature be introduced and taught to existing Yarn users?
+This RFC introduces new terms—“alerts” and “alert types”. It also makes more explicit the event types that already occur in Yarn’s reporters (`finished`, `warning`, `error`). It would not affect much else in Yarn’s design or documentation, being orthogonal to aspects other than reporting. It may also be worth introducing early in tutorials, since it might have a “wow” factor with little clutter (`yarn -a`).
 
 # Drawbacks
 Deferring audio alerts to separate projects (see Alternatives) would keep Yarn’s core cleaner. Building audio alerts into Yarn has the following disadvantages:
