@@ -87,3 +87,6 @@ These alternatives are not mutually exclusive with this RFC. They may deserve th
 
 ## Alternatives in CLI options
 **TBD**: Hierarchial/numeric alert levels
+
+# Unanswered questions
+See Alternatives subsections. Also: Progress-event alerts?
