@@ -27,6 +27,13 @@ For a while workspaces will be considered an experimental feature and we will ex
 
 I'll use [Jest](https://github.com/facebook/jest) for the example implementation.
 
+Workspaces can be enabled by a flag in .yarnrc:
+```
+yarn-offline-mirror "path"
+disable-self-update-check true
+workspaces-experimental true
+```
+
 The structure of the source code is following
 
 ```
@@ -101,7 +108,7 @@ If workspaces is enabled and yarn install is run at the root level of jest Yarn 
     "babel-core": "^6.23.1,
   },
   "dependencies": {
-     "babel-core": "^6.0.0",
+    "babel-core": "^6.0.0",
     "babel-plugin-istanbul": "^4.0.0",
     "babel-preset-jest": "^19.0.0"
     "babel-plugin-jest-hoist": "^19.0.0"
