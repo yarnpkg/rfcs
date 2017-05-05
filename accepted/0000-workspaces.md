@@ -146,19 +146,6 @@ requesting it from the cache/registry.
 If it does not match we should not symlink it in. We can also add a flag that
 warns when this happens.
 
-### Building workspaces (`postinstall`)
-
-Because workspaces can depend on one another as `devDependencies` that are then
-needed for build scripts in `postinstall` hooks, we need to make sure that they
-are ordered correctly.
-
-Instead of simply iterating through every workspace and running the postinstall
-script, we need to topologically sort them based on which workspaces depend on
-what.
-
-If we encounter circular dependencies, we can still run the postinstall hooks,
-but we should warn the user.
-
 #### `yarn.lock`
 
 Treating the install process of an entire project including its workspaces as a
@@ -355,6 +342,19 @@ work.
 
 The alternative is to leave a bunch of packages in half finished states
 which means the author has to go through and fix them all individually.
+
+## Building workspaces (postinstall/prepublish)
+
+Because workspaces can depend on one another as `devDependencies` that are then
+needed for build scripts in `postinstall` and `prepublish` hooks, we need to
+make sure that they are ordered correctly.
+
+Instead of simply iterating through every workspace and running the
+postinstall/prepublish script, we need to topologically sort them based on
+which workspaces depend on what.
+
+If we encounter circular dependencies, we can still run the
+postinstall/prepublish scripts, but we should warn the user.
 
 ## Scripting
 
