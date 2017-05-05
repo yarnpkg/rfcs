@@ -17,28 +17,35 @@ Despite their utility, using these tools still require to manually install them,
 This RFC suggests to add a new command:
 
 ```
-$> yarn create <package-name>
+$> yarn create <name>
 ```
 
-Running this command would have the samne effect as:
+Running this command would have the same effect as:
 
 ```
-$> yarn add --dev <package-name>
-$> cd node_modules/<package-name>
-$> npm_create_path="$OLDPWD" yarn run create
+$> yarn global add yarn-create-<name>
+$> yarn-create-<name>
 ```
 
 One could assume that a simple boilerplate would be configured as such:
 
-```
+```json
 {
-  "scripts": {
-    "create": "cp -rf ./files $npm_create_path"
+  "bin": {
+    "yarn-create-hello": "index.js"
   }
 }
 ```
 
-This RFC doesn't cover the case where `yarn create` is called in an already existing package without argument - it is suggested that the boilerplate modules register new script commands that the user could then use:
+With `hello.js`:
+
+```js
+let fs = require(`fs`);
+
+fs.writeFileSync(`hello.md`, `Hello World!~`);
+```
+
+This RFC doesn't cover the case where `yarn create <name>` is called in an already existing package - it is suggested that the boilerplate modules register new script commands that the user could then use:
 
 ```
 $> cat package.json
@@ -52,11 +59,7 @@ $> yarn cra eject
 
 # Alternatives
 
-  - We could do more than just running a script (maybe automatically copying files, etc), but I'm not sure it would be a good idea - I feel like such a feature should remain very simple.
-
-  - The `$npm_create_path` variable could be an argument instead of an environment variable. However, it would then be harder to use shellscripts as `create` scripts, and would make programming errors more potent (for example, a `create` script that would end with an `rm -rf` would be bad).
-
-  - The package could be added globally instead of locally, but doing so could cause versioning issues: if we choose to upgrade `<package-name>` when running `yarn create`, then the other projects created before this time would no longer be able to use the previous version. If we choose not to upgrade `<package-name>`, then the users will probably never upgrade at all.
+  - We could do more than just running a binary file (maybe automatically copying files, etc), but I'm not sure it would be a good idea - I feel like such a feature should remain very simple.
 
   - The script could be named differently. However, "create" isn't currently used as as lifecycle hook, and doesn't see a lot of usage (of the 490,000+ packages on the npm registry, only 33 of them have a script called "create").
 
