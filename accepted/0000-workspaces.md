@@ -127,6 +127,38 @@ multiple trees of dependencies, resolving them separately. This ends up being a
 better behavior for most users anyways. It also (likely) ends up being much
 faster since it does not have to resolve dependencies for each workspace.
 
+### Cross-linking
+
+One of the major benefits to having workspaces is being able to test changes
+across many packages at once.
+
+In order to accomplish this, when we have a workspace that depends on another
+we need to link it in.
+
+As part of the install process, every single dependency in the entire tree
+should lookup to see if it exists within the local project as a workspace. If
+it does, it should then compare the requested version range and see if the
+local version matches.
+
+If it does match we should symlink the workspace in as a dependency instead of
+requesting it from the cache/registry.
+
+If it does not match we should not symlink it in. We can also add a flag that
+warns when this happens.
+
+### Building workspaces (`postinstall`)
+
+Because workspaces can depend on one another as `devDependencies` that are then
+needed for build scripts in `postinstall` hooks, we need to make sure that they
+are ordered correctly.
+
+Instead of simply iterating through every workspace and running the postinstall
+script, we need to topologically sort them based on which workspaces depend on
+what.
+
+If we encounter circular dependencies, we can still run the postinstall hooks,
+but we should warn the user.
+
 #### `yarn.lock`
 
 Treating the install process of an entire project including its workspaces as a
