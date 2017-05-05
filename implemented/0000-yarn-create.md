@@ -17,14 +17,14 @@ Despite their utility, using these tools still require to manually install them,
 This RFC suggests to add a new command:
 
 ```
-$> yarn create <name>
+$> yarn create <name> ...
 ```
 
 Running this command would have the same effect as:
 
 ```
 $> yarn global add yarn-create-<name>
-$> yarn-create-<name>
+$> yarn-create-<name> ...
 ```
 
 One could assume that a simple boilerplate would be configured as such:
