@@ -50,7 +50,28 @@ project's `package.json`) which point to directories where a workspace
 Workspace `package.json`'s do not have any additional configuration from a
 standard package.
 
-***[WIP]***
+#### `.gitignore` & `.npmignore`
+
+For each workspace, the `.*ignore` file to be used on publish should be
+looked up in this order:
+
+1. Workspace `.npmignore`
+2. Workspace `.gitignore`
+3. Project `.npmignore`
+4. Project `.gitignore`
+
+If you reach the project's `.*ignore` file, it should apply from the root
+of the project still.
+
+**Example:**
+
+```
+path/to/workspaces/from/root/*/{src,test}
+```
+
+#### `package.json#files`
+
+TBD
 
 ## Commands
 
