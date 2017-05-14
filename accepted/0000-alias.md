@@ -4,7 +4,7 @@
 
 # Summary
 
-Add an alias system similar to `git alias` to the yarn command.
+Add an alias system similar to `git alias` to the yarn project.
 
 # Motivation
 
