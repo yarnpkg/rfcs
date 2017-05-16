@@ -11,19 +11,27 @@ With the addition of the Workspace feature, it will become handy to be able to e
 
 # Detailed design
 
-This RFC suggests to add the two following commands:
+This RFC suggests to add the following commands:
+
+## `yarn exec <binary-name> ...`
+
+Execute a shell command inside the same environment than the one used when running scripts. For example, running `yarn exec env` will print something similar to this:
 
 ```
-$> yarn workspace <project-name> pwd
-$> yarn workspace <project-name> <command-name> ...
+PWD=/path/to/project
+npm_config_user_agent=yarn/0.23.4 npm/? node/v7.10.0 darwin x64
+npm_node_execpath=/usr/bin/node
+...
 ```
 
-The first one will print the project directory for the package referenced by `project-name`.
+## `yarn workspace <workspace-name> <command-name> ...`
 
-The second one will be an alias for:
+This command will execute the specified sub-command inside the workspace that is being referenced by `<workspace-name>`.
+
+Recursion aside, it's essentially an alias for:
 
 ```
-$> (cd $(yarn workspace <project-name> pwd) && yarn <command-name> ...)
+$> (cd $(yarn workspace <workspace-name> exec pwd) && yarn <command-name> ...)
 ```
 
 # Drawbacks
