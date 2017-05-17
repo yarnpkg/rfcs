@@ -37,11 +37,6 @@ during a build but is mostly executed manually and its state persisted in cvs as
 
 
 # How We Teach This
-
-The possible new name candidates are, e.g.,:
-`strip`, `shrink`, `stripModules`, `shrinkModules`, `cleanModules`,
-`stripPackages`, and even `yarn-clean`.
-
 The documentation should only reflect the change of the command name.
 
 Release notes should provide a note about a possible breaking change.
