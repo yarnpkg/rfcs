@@ -27,11 +27,11 @@ There are a lot of such bugs in this project and more elsewhere (example: twbs/b
 2. Also, it is nice to be able to run a user-defined `yarn clean` if you already can run a user-defined `yarn build`.
 
 # Detailed design
-The command is to be renamed to one of the possible (less confusing) candidates (see below).
+The command is to be renamed to `pruneModules`.
 
-Next, it should be available for redefinition by user scripts.
+Next, `clean` should be available for redefinition by user scripts.
 
-It should be more or less safe to produce an error in a standard way when the command
+It should be more or less safe after that to produce an error in a standard way when `clean`
 is executed but the user script is missing. This is because the command is not usually run
 during a build but is mostly executed manually and its state persisted in cvs as a `.yarnclean` file.
 
@@ -59,6 +59,8 @@ and on subsequent installation of modules (listing cleaned/ignored files).
 2. Deprecate `yarn command` for user-defined scripts. (So that only `yarn run command` is supported.)
 3. Deprecate running user-defined commands through yarn altogether (and optionally provide
 a different default command for running user-scripts, e.g., `yarun`).
-
-# Unresolved questions
-A new name should be chosen. Some candidates are listed above.
+4. Some alternative proposed new name candidates are:
+`delete-module-bloat`, `autoclean`, `delete-package-assets`, `remove-module-files`,
+`enable-advanced-auto-disk-space-optimizations`, `prune`,
+`strip`, `shrink`, `stripModules`, `shrinkModules`, `cleanModules`,
+`stripPackages`, `yarn-clean`.
