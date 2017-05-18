@@ -11,8 +11,7 @@ Ability for workspaces to refer each other when testing packages in integration.
 
 ## Motivation
 
-People tend to split larger projects into self contained packages that are published to npm independently.
-Workspaces feature is being developed for Yarn to address this workflow.
+People tend to split larger projects into self contained packages that are published to npm independently. The workspaces feature is being developed for Yarn to address this workflow.
 
 In particular, testing packages that refer other packages from the same codebase can be difficult because Node.js and front end bundling tools would look up the referred packages in node_modules folder as it should be installed from npm registry.
 
