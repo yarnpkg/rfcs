@@ -137,6 +137,7 @@ This solution creates a symlink inside node_modules of a Workspace package and s
 * Run **yarn pack** for **jest-matcher-utils** and install them from a .tgz file
     * PROS
         * Works without symlinks
+        * Does not leak files from **jest-matcher-utils**, i.e. node_modules folder
         * Runs the same pack command as with real publishing to registry (tests folder and dev files won't be included)
     * CONS
         * Every file change during development of **jest-matcher-utils** will require Yarn to repack and install it  
@@ -144,7 +145,7 @@ This solution creates a symlink inside node_modules of a Workspace package and s
 * Hardlink files in **jest-matcher-utils** (only the ones listed for publishing) into  jest-diff/node_modules/**jest-matcher-utils**. Similar idea was expressed in the knit RFC https://github.com/yarnpkg/rfcs/pull/41
     * PROS
         * Works without symlinks' drawbacks
-        * Partially emulates published package by leaving out non publishable files
+        * Partially emulates published package by leaving out non publishable files, e.g. node_modules folder
         * Changes in the hardlinked files will be reflected in referring workspace node_modules
     * CONS
         * Hardlinks have limited support in Windows pre 10
@@ -152,11 +153,12 @@ This solution creates a symlink inside node_modules of a Workspace package and s
         * This does not simulate actual installation of the package as no prepublish and postinstall lifecycle scripts are executed
 
 Yarn Workspaces could implement all of the above linking strategies and give developers a choice which one to choose for their project.
-
+Or the alternatives could be merged in a single solution for isolated e2e testing.
 
 ## Unresolved questions
 
 * Is there still an issue with Node resolving real paths in symlinked folders (https://github.com/nodejs/node/issues/3402)? I think if all node_modules are installed in the Workspace root which is a parent to all workspaces and there are no relative (via ../../...) requires between workspaces everything should be working fine.
+* Should the symlinks be created in Workspace root node_modules instead of referring Workspaces?
 * Any special treatment for scoped packages?
 * Does it need to work for other type of packages: git, file, etc?
 * As described in Workspace phase 1 RFC (https://github.com/yarnpkg/rfcs/pull/60) there is only one lockfile per workspace. Should we have workspaces that are referred from other workspaces referred in the root lockfile?
