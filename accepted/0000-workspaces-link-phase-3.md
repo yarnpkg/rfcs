@@ -110,17 +110,17 @@ When user runs yarn install, this folder structure of the Workspace gets created
 Yarn would only link workspaces to each other if they match semver conditions.
 For example,
 
-* jest-matcher-utils package.json is 20.0.3
-* if jest-diff package.json dependencies has jest-matcher-utils with version specifier that matches 20.0.3, e.g. "^20.0.3" then Yarn will make a link from jest-diff/node_modules/jest-matcher-utils to jest-matcher-utils workspace
-* if jest-diff package.json dependencies has jest-matcher-utils with version specifier that does not match 20.0.3, e.g. "^19.0.0" then Yarn would fetch jest-matcher-utils@^19.0.0 from npm registry and install it the regular way
+* `jest-matcher-utils` package.json is `20.0.3`
+* if `jest-diff` package.json dependencies has `jest-matcher-utils` with version specifier that matches 20.0.3, e.g. `"^20.0.3"` then Yarn will make a link from `jest-diff/node_modules/jest-matcher-utils` to `jest-matcher-utils` workspace
+* if `jest-diff` package.json dependencies has `jest-matcher-utils` with version specifier that does not match `20.0.3`, e.g. `"^19.0.0"` then Yarn would fetch `jest-matcher-utils@^19.0.0` from npm registry and install it the regular way
 
 
-### problems with peer dependencies and hoisting
+### Problems with peer dependencies and hoisting
 
 There is a common [peer dependency problem](http://codetunnel.io/you-can-finally-npm-link-packages-that-contain-peer-dependencies/) when using **yarn link** on local packages that people can work around in Node 6+ by setting **--preserve-symlinks** runtime flag.
-In Workspaces this situation won't be a problem because node_modules are installed in Workspace root and Node.js require statements will resolve third-party peer dependencies by going up the folder tree and reaching the Workspaces' root node_modules.
+In Workspaces this situation won't be a problem because node_modules are installed in Workspace root and Node.js `require()` statements will resolve third-party peer dependencies by going up the folder tree and reaching the Workspaces' root node_modules.
 
-As long as **jest-matcher-utils** does not make relative requires via its parent folder, flag **--preserve-symlinks **won't be necessary.
+As long as **jest-matcher-utils** does not make relative requires via its parent folder, flag **--preserve-symlinks** won't be necessary.
 
 
 ## Drawbacks
@@ -130,7 +130,7 @@ This solution creates a symlink inside node_modules of a Workspace package and s
 * Symlinks are not supported in all tools (e.g. watchman)
 * Symlinks are not supported well in all OS and environments (Windows pre 10 Creative updated, Docker on SMB storage(?))
 * A symlink to **jest-match-utils** does not emulate actual installation of the package, it just symlinks to the package source code - no prepublish and postinstall lifecycle scripts are executed and no files are filtered (as done during publishing)
-* A version change in package.json of **jest-match-utils **needs Yarn to rebuild the links, this may require file watching
+* A version change in package.json of **jest-match-utils** needs Yarn to rebuild the links, this may require file watching
 
 ## Alternatives
 
@@ -148,7 +148,7 @@ This solution creates a symlink inside node_modules of a Workspace package and s
         * Changes in the hardlinked files will be reflected in referring workspace node_modules
     * CONS
         * Hardlinks have limited support in Windows pre 10
-        * When new files are created/removed in **jest-matcher-utils **the hardlinks need to be regenerated, that may require file watching to get good developer experience otherwise developer needs to run yarn install on every significant change
+        * When new files are created/removed in **jest-matcher-utils** the hardlinks need to be regenerated, that may require file watching to get good developer experience otherwise developer needs to run yarn install on every significant change
         * This does not simulate actual installation of the package as no prepublish and postinstall lifecycle scripts are executed
 
 Yarn Workspaces could implement all of the above linking strategies and give developers a choice which one to choose for their project.
