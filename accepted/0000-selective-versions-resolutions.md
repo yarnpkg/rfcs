@@ -64,13 +64,16 @@ The need could arise for forcing the use of `typescript@2.3.2` (or
 
 In these example, the need does not seem very important (the user could maybe 
 use `typescript@2.2.2` or ask the `@angular/cli` dev team to relax its
-constraints on typescript), but there could be cases where a nested dependency introduces a bug and the project developper would want to set a specific
+constraints on typescript), but there could be cases where a nested dependency
+introduces a bug and the project developer would want to set a specific
 version for it (see for example this
 [comment](https://github.com/yarnpkg/yarn/issues/2763#issuecomment-302682844)).
 
 ## Related scenario (out of scope of this document)
 
-An extension of this motivation is also the potential need for mapping nested dependencies to others. For example a project developper could want to map `typescript@>=2.0.0 <2.3.0` to `my-typescript-fork@2.0.0`.
+An extension of this motivation is also the potential need for mapping nested
+dependencies to others. For example a project developer could want to map
+`typescript@>=2.0.0 <2.3.0` to `my-typescript-fork@2.0.0`.
 
 See alternatives solutions below also.
 
@@ -105,7 +108,7 @@ duplicating typescript installation.
 ## Relation to non-nest dependencies
 
 The `devDependencies` and `dependencies` fields always take precedence over the
-`resolutions` field: if the user defines explicitely a dependency there,
+`resolutions` field: if the user defines explicitly a dependency there,
 it means that he wants that version, even if it's specified with a non-exact
 specification. So the `resolutions` field only applies to nested-dependencies.
 
@@ -116,7 +119,7 @@ the whole project, as it already does.
 But the `resolutions` field is always considered by yarn, even if `--flat` is
 not specified.
 
-Inceidently, this resolves this strange situation when two developers would be
+Incidently, this resolves this strange situation when two developers would be
 working on the same project, and one is using `--flat` while the other is not,
 and they would get different `node_modules` contents because of that.
 
@@ -174,14 +177,14 @@ simpler).
 
 Yarn and npm users are highly used to the idea that a dependency can be
 present many times in the `node_module`, depending on which package needs it.
-This has advantages and inconvenients, but it is one of the specificity of the
+This has advantages and disadvantages, but it is one of the specificity of the
 npm ecosystem package management.
 
 In this light, taking such as design decision puts yarn a bit farther to such
 way of doing thing, and it could be considered a bad direction to go toward.
 
 Some of the alternatives below actually take this into consideration, but are
-a bit more complex in terms of expressivity, so were not chosen by the RFC
+a bit more complex in terms of expressiveness, so were not chosen by the RFC
 submitter (see open questions below too).
 
 # Alternatives
@@ -266,9 +269,9 @@ and a resolution. For example if the user specify a dependency to
 For sure if the above alternative solution is chosen, this wouldn't make sense.
 
 Should we warn if a resolutions is incompatible, but still upper-bounded?
-For example, forcing version `a@2.3` while a dependency needs version `a@2.2` is
-usually less problematic than forcing version `a@2.2` while a dependency needs
-version `a@2.3`.
+For example, forcing version `a@2.3` while a dependency needs version `a@2.2`
+is usually less problematic than forcing version `a@2.2` while a dependency
+needs version `a@2.3`.
 The problem with differentiating these situations is that yarn to start giving
 lots of semantics to versions and it can give false certainty to the user than
 a problematic situation is not problematic. So it may be better to always warn
