@@ -85,9 +85,12 @@ file to be considered all the time and on a per-package basis.
 When a nested dependency is being resolved by yarn, if the `resolutions` field
 contains a version for this package, then this version is used instead.
 
-All the examples are given with exact dependencies, but note that putting a
+Most of the examples are given with exact dependencies, but note that putting a
 non-exact specification in the `resolutions` field should be accepted and
-resolved by yarn like it usually does.
+resolved by yarn like it usually does. This subject is discussed below also.
+
+Any potentially counter-intuitive situation will result in a warning being
+issued. This subject is discussed at the end of this section.
 
 ## Example
 
@@ -136,13 +139,35 @@ provoke the modification of the `yarn.lock` (see
 
 This feature would remove the need for this behaviour of yarn.
 
+## Non-exact version specifications
+
+If there is a non-exact specifications in the `resolutions` field, the rule is
+the same: the `resolutions` field takes precedence over the specification in a
+nested dependency.
+
+In case the `resolutions` field is broader than the nested dependency
+specification, then a warning can be issued. This happens if the the exact
+version resolved by yarn based on the `resolutions` specification is
+incompatible with the nested dependency specification.
+
+For example, if `@angular/cli` depends on `typescript@>=2.0.0 <2.3.0` and the
+`resolutions` field contains `typescript@>=2.0.0 <2.4.0`, then if the latest
+available version for typescript is `2.2.2`, no warning is issued, and if the
+latest available version for typescript is `2.3.2` then a warning is issued.
+
+The rational behind that is that since the `yarn.lock` file is only modified
+by the user (via yarn commands), then a warning will always be issued before
+such a situation happens and is written to the `yarn.lock` file.
+
 ## Warnings in logs
 
-yarn would need to warn about the following situations:
+yarn should warn about the following situations:
 - Unused resolutions
 - Incompatible resolutions: see the above section about `yarn.lock`.
 Incompatible resolutions should be accepted but warned about since it could
 lead to unwanted behaviour.
+- Broadening specifications: see above about non-exact specifications. This
+actually falls under the umbrella of incompatible resolutions.
 - ? (see open questions below)
 
 # How We Teach This
