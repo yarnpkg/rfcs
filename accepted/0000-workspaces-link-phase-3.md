@@ -188,6 +188,11 @@ Or the alternatives could be merged in a single solution for isolated e2e testin
 
 * Is there an issue with Node resolving real paths in symlinked folders (https://github.com/nodejs/node/issues/3402) with this solution?
 If workspaces don't make relative requires outside of their root (e.g. a file in a sibling folder to the one with workspace's package.json), all requires should resolve the same way.
+
 * Does it need to work for other type of packages: git, file, etc?
+
 * As described in Workspace phase 1 RFC (https://github.com/yarnpkg/rfcs/pull/60) there is only one lockfile per workspace. Does yarn.lock need to reference that `jest-matcher-utils@^20.0.0` is resolved as a link to a folder?
+
 * Combining multiple workspaces is out of scope of this document.
+
+* (related to general Workspaces RFC) How do we prevent people from publishing package and forgetting to setup correct dependencies for every workspace? E.g. `left-pad` may be absent from a workspace package.json and be present in the workspace root package.json. Testing the workspace code with node_modules installed in the root won't reveal this issue.
