@@ -143,9 +143,14 @@ Workspace root may also depend on a workspace and it should be installed the sam
 ...
 ```
 
-### Build scripts run order
+### Build scripts run order and cycle detection
 
-TBD, looking at https://gist.github.com/thejameskyle/abbc146a8cb5c26194c8acc4d14e7c30
+From workspaces linking point of view installation phases look like this:
+
+1. Resolution - Yarn identifies all workspaces and which workspaces refer each other
+2. Fetching - Yarn skips it for linked workspaces
+3. Linking - Yarn creates symlinks in node_modules of referring workspaces in the alphanumeric order of workspaces (starting with workspace root)
+4. Running scripts - Yarn runs (pre/post)install scripts for each linked workspace the same way it runs for packages from registry. Yarn already has a way to identify cycles between packages during this phase, in this case the order of execution is not controlled by user. To control scripts execution order for cycling dependencies there is an RFC gist https://gist.github.com/thejameskyle/abbc146a8cb5c26194c8acc4d14e7c30 by @thejameskyle
 
 ## Drawbacks
 
