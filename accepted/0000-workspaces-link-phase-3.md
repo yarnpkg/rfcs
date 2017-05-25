@@ -15,7 +15,7 @@ People tend to split larger projects into self contained packages that are publi
 
 In particular, testing packages that refer other packages from the same codebase can be difficult because Node.js and front end bundling tools would look up the referred packages in node_modules folder as it should be installed from npm registry.
 
-Yarn Workspaces need to enable referring other local packages the same way when local packages are in development mode (source of truth is the package source code) and in production mode (source of truth is the package installed from npm).
+Yarn Workspaces need to be able to refer to other local packages the same way when local packages are in development mode (source of truth is the package source code) and in production mode (source of truth is the package installed from npm).
 
 ## Detailed design
 
@@ -26,9 +26,9 @@ The structure of the source code is following
 | ---- package.json
 | ---- packages/
 | -------- jest-matcher-utils/
-| ------------ packjage.json
+| ------------ package.json
 | -------- jest-diff/
-| ------------ packjage.json
+| ------------ package.json
 ...
 ```
 
@@ -49,15 +49,15 @@ jest-matcher-utils (workspace referred by another one)
 ```
 {
   "name": "jest-matcher-utils",
-  "description": "A set of utility functions for jest-matchers and related packages",
+  "description": "...",
   "version": "20.0.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/facebook/jest.git"
   },
-  "license": "BSD-3-Clause",
-  "main": "build/index.js",
-  "browser": "build-es5/index.js",
+  "license": "...",
+  "main": "...",
+  "browser": "...",
   "dependencies": {
     "chalk": "^1.1.3",
     "pretty-format": "^20.0.3"
@@ -74,9 +74,9 @@ jest-diff (workspace that refers jest-matcher-utils)
     "type": "git",
     "url": "https://github.com/facebook/jest.git"
   },
-  "license": "BSD-3-Clause",
-  "main": "build/index.js",
-  "browser": "build-es5/index.js",
+  "license": "...",
+  "main": "...",
+  "browser": "...",
   "dependencies": {
     "chalk": "^1.1.3",
     "diff": "^3.2.0",
@@ -105,6 +105,8 @@ When user runs yarn install, this folder structure of the Workspace gets created
 ...
 ```
 
+`jest/packages/jest-diff/node_modules/**jest-matcher-utils**` is a relative symlink to `jest/packages/jest-matcher-utils`
+
 ### Dependencies and version matching
 
 Yarn would only link workspaces to each other if they match semver conditions.
@@ -122,6 +124,28 @@ In Workspaces this situation won't be a problem because node_modules are install
 
 As long as **jest-matcher-utils** does not make relative requires via its parent folder, flag **--preserve-symlinks** won't be necessary.
 
+### Installing workspace in project root
+
+Workspace root may also depend on a workspace and it should be installed the same way as other workspaces referring each other, e.g. if jest has `jest-matcher-utils` as dependency it will be installed
+
+```
+| jest/
+| ---- node_modules/
+| -------- chalk/
+| -------- diff/
+| -------- pretty-format/
+| -------- **jest-matcher-utils**/  (symlink) -> ../packages/jest-matcher-utils
+| ---- package.json
+| ---- packages/
+| -------- jest-matcher-utils/
+| ------------ node_modules/ (empty, all dependencies hoisted to the root)
+| ------------ package.json
+...
+```
+
+### Build scripts run order
+
+TBD, looking at https://gist.github.com/thejameskyle/abbc146a8cb5c26194c8acc4d14e7c30
 
 ## Drawbacks
 
@@ -129,8 +153,8 @@ This solution creates a symlink inside node_modules of a Workspace package and s
 
 * Symlinks are not supported in all tools (e.g. watchman)
 * Symlinks are not supported well in all OS and environments (Windows pre 10 Creative updated, Docker on SMB storage(?))
-* A symlink to **jest-match-utils** does not emulate actual installation of the package, it just symlinks to the package source code - no prepublish and postinstall lifecycle scripts are executed and no files are filtered (as done during publishing)
-* A version change in package.json of **jest-match-utils** needs Yarn to rebuild the links, this may require file watching
+* A symlink to **jest-matcher-utils** does not emulate actual installation of the package, it just symlinks to the package source code - no prepublish and postinstall lifecycle scripts are executed and no files are filtered (as done during publishing)
+* A version change in package.json of **jest-matcher-utils** needs Yarn to rebuild the links, this may require file watching
 
 ## Alternatives
 
@@ -157,8 +181,8 @@ Or the alternatives could be merged in a single solution for isolated e2e testin
 
 ## Unresolved questions
 
-* Is there still an issue with Node resolving real paths in symlinked folders (https://github.com/nodejs/node/issues/3402)? I think if all node_modules are installed in the Workspace root which is a parent to all workspaces and there are no relative (via ../../...) requires between workspaces everything should be working fine.
-* Should the symlinks be created in Workspace root node_modules instead of referring Workspaces?
-* Any special treatment for scoped packages?
+* Is there an issue with Node resolving real paths in symlinked folders (https://github.com/nodejs/node/issues/3402) with this solution?
+If workspaces don't make relative requires outside of their root (e.g. a file in a sibling folder to the one with workspace's package.json), all requires should resolve the same way.
 * Does it need to work for other type of packages: git, file, etc?
-* As described in Workspace phase 1 RFC (https://github.com/yarnpkg/rfcs/pull/60) there is only one lockfile per workspace. Should we have workspaces that are referred from other workspaces referred in the root lockfile?
+* As described in Workspace phase 1 RFC (https://github.com/yarnpkg/rfcs/pull/60) there is only one lockfile per workspace. Does yarn.lock need to reference that `jest-matcher-utils@^20.0.0` is resolved as a link to a folder?
+* Combining multiple workspaces is out of scope of this document.
