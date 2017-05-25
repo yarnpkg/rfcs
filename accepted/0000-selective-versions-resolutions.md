@@ -317,7 +317,7 @@ seen it happen many times with maven, which is quite complex but complete in
 its dependency management. Users would get confused and it can take time to
 understand the implications of manipulation the `resolutions` field .
 
-# Alternatives and/or extensions
+# Alternatives
 
 ## Global nested dependencies resolution
 
