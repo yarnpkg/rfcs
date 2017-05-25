@@ -162,13 +162,16 @@ such a situation happens and is written to the `yarn.lock` file.
 ## Warnings in logs
 
 yarn should warn about the following situations:
-- Unused resolutions
-- Incompatible resolutions: see the above section about `yarn.lock`.
-Incompatible resolutions should be accepted but warned about since it could
-lead to unwanted behaviour.
-- Broadening specifications: see above about non-exact specifications. This
-actually falls under the umbrella of incompatible resolutions.
-- ? (see open questions below)
+1. Unused resolutions.
+
+2. Incompatible resolutions (see also above the sections about `yarn.lock`
+and about broadening non-exact specifications).
+Basically, an incompatible resolution is used because a package does not
+correctly express its dependencies. In an ideal world, the package should
+be fixed at one point or another and the resolution should be removed.
+In that sense, incompatible resolutions should always be warned about.
+Furthermore, an incompatible resolution is a potential for unwanted behaviour
+and should thus never be ignored by the user.
 
 # How We Teach This
 
@@ -285,19 +288,3 @@ As explained in the alternative solutions section, it would be much more
 expressive and coherent with the npm ecosystem package management paradigm
 to use nested dependency resolutions per project dependency.
 Would the loss of simplicity acceptable maybe?
-
-## Warnings in logs
-
-Should yarn warn the user about an incoherence between an explicit dependency
-and a resolution. For example if the user specify a dependency to
-`typescript@2.3.2` and the resolutions field contains `typescript@2.3.0`.
-For sure if the above alternative solution is chosen, this wouldn't make sense.
-
-Should we warn if a resolutions is incompatible, but still upper-bounded?
-For example, forcing version `a@2.3` while a dependency needs version `a@2.2`
-is usually less problematic than forcing version `a@2.2` while a dependency
-needs version `a@2.3`.
-The problem with differentiating these situations is that yarn to start giving
-lots of semantics to versions and it can give false certainty to the user than
-a problematic situation is not problematic. So it may be better to always warn
-about incompatible resolutions.
