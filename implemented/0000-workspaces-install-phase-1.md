@@ -157,4 +157,6 @@ Having multi-project dependency management natively in Yarn gives us a more cohe
 
 # Unresolved questions
 
-Running lifecycle scripts may cause unexpected results if they require a specific folder structure in node_modules.
+* Running lifecycle scripts may cause unexpected results if they require a specific folder structure in node_modules.
+
+* How do we prevent people from publishing package and forgetting to setup correct dependencies for every workspace? E.g. `left-pad` may be absent from a workspace package.json and be present in the workspace root package.json. Testing the workspace code with node_modules installed in the root won't reveal this issue.
