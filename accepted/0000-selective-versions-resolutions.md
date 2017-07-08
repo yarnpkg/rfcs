@@ -208,19 +208,21 @@ latter is the result of yarn resolution being influenced by the *resolution*).
 dependency `a`.
 - `**/a/b` denotes the directly nested dependency `b`
 of all the dependencies and nested dependencies `a` of the project.
-- `a` denotes the project's dependency `a` (see below for a discussion on
-the matter of specifying a *resolution* for one of the project dependency).
 - `a/**/b` denotes all the nested dependencies `b` of the project's
 dependency `a`.
 - `**/a` denotes all the nested dependencies `a` of the project.
 - `a` is an alias for `**/a` (for retro-compatibility, see below, and because
 if it wasn't such an alias, it wouldn't mean anything as it would represent
 one of the non-nested project dependencies, which can't be overridden as
-explained below)
-- `**/a-*` denotes all the nested dependencies of the project whose
-name starts with `a-`.
+explained below).
 - `**` denotes all the nested dependencies of the project (a bad idea mostly,
 as well as all other designations ending with `**`).
+
+Note on single star: `*` is not authorized in a package resolution because it
+would introduce too much non-determinism. For example, there is the risk of a
+referring to `package-*` at one point to match `package-a` and `package-b`,
+and later on, this would match a new nested dependency `package-c` that wasn't
+intended to be matched.
 
 ### Version specification
 
@@ -258,8 +260,15 @@ as expected: the nested dependencies will have the fixed version specified.
 
 ## Relation to the `--flat` option
 
-The `--flat` option becomes thus a way to populate the resolutions field for
-the whole project, as it already does (using a package designation in the
+Before this RFC, `--flat` is both about populating resolutions field AND
+taking resolutions field into account when executing the `install` command
+(including installation as part of the `add` command).
+
+This RFC is about taking the `resolutions` field into account when executing
+the `install` command  (including installation as part of the `add` command).
+
+So with this RFC, `--flat` is now only about populating resolutions field.
+I does it in the same way as before (using a package designation in the
 form of `package-name`).
 
 The only breaking change is that the `resolutions` field is always considered
@@ -275,8 +284,8 @@ installation itself, not the adding), it will continue to behave as before
 by asking for *resolutions* of all the nested dependencies of the project even
 with `add`.
 
-See open question below about the need for removing `--flat` from `install`
-and for introducing a `flatten` command instead.
+In the future, `--flat` will need to be rethought but for now we will keep
+its behaviour.
 
 ## `yarn.lock`
 
@@ -342,6 +351,11 @@ be fixed at one point or another and the resolution should be removed.
 In that sense, incompatible resolutions should always be warned about.
 Furthermore, an incompatible resolution is a potential for unwanted behaviour
 and should thus never be ignored by the user.
+
+## Locality of the *resolutions*
+
+The `resolutions` field only apply to the local project and not to the projects
+that depends on it. It is the same as with lock files in a way.
 
 # How We Teach This
 
@@ -459,21 +473,12 @@ The two alternatives discussed in the section just above, "Mapping version
 specifications" and "Mapping version specifications as well as packages name",
 can be adapted to the current proposition to support these uses cases as well.
 
-# Unresolved questions
+## `flatten`
 
-## Package designation and single `*`
+Some notes on `--flat` and its future with respect to this RFC.
 
-I am not totally convinced that using a single `*` in a package designation
-is a good idea. Mostly because it introduces much for uncertainty to what it is
-going to be applied. In particular, I'm thinking about defining a *resolution*
-like that and latter adding a dependency which has a dependency that matches
-but is not intended to. I feel like it adds a lot of mental weight for the
-user to manipulate single `*`.
-
-## `--flat` option
-
-I wonder if the `--flat` option of `install` shouldn't be transformed to
-a `flatten` command that would:
+The `--flat` option of `install` could be transformed to a `flatten` command
+that would:
 1. Fill in the *resolutions* for all nested dependencies.
 2. Set the `flat` field in the `package.json`.
 
@@ -482,14 +487,7 @@ It makes no real sense to have a flattening mode for `install`:
 2. `install` should be only about building the `node_modules` directory, not
 modifying the the `package.json` IMHO.
 
-If we do that, then the `--flat` option of `add` (and the `flat` option in the
-`package.json`) would apply not to the installation but to the adding,
-upgrading, etc (everything that modify the `package.json`'s dependencies):
-it will ensure that the project stays flattened via the populating of the
-`resolutions` field.
-
-## resolutions in dependencies
-
-If a dependency contains resolutions, should it be taken into account?
-In Maven, it is not the case for example.
-In other words: should we restrict resolutions to `private` project?
+Then the `flat` option in the `package.json` (and the `--flat` option of `add`)
+would apply not to the installation but to the adding, upgrading, etc
+(everything that modify the `package.json`'s dependencies). It will ensure
+that the project stays flattened via the populating of the `resolutions` field.
