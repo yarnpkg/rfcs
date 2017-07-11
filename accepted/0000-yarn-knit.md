@@ -68,7 +68,7 @@ There are already several ways of linking dependencies in Yarn. This section is 
 
 * `yarn pack` + `yarn install dep.tgz` is similar to `file://` dependencies. The pack + install process must be re-run every time a change is made. It does correctly dedupe dependencies, however, as `node_modules` are excluded by `yarn pack`.
 
-* [Workspaces](https://github.com/yarnpkg/rfcs/pull/66) are similar but solve a different problem. Where workspaces are great for a tree of related modules (e.g. in a monorepo), `yarn knit` is for linking together modules in separate trees, e.g. things that might be shared between multiple workspaces.
+* [Workspaces](https://github.com/yarnpkg/rfcs/pull/66) are similar but solve a different problem. Where workspaces are great for a tree of related modules (e.g. a monorepo), `yarn knit` is for linking together modules in separate trees, e.g. things that might be shared between multiple workspaces.
 
 # How We Teach This
 
@@ -78,13 +78,13 @@ This proposal is mostly additive and affects only how people work on libraries t
 
 # Drawbacks
 
-One issue with this proposal is that it's not clear what to put in the lockfile after running `yarn link dep` since we don't have an npm URL for the dep yet -- it hasn't been published to npm.
+One issue with this proposal is that it's not clear what to put in the lockfile after running `yarn knit dep` since we don't have an npm URL for the dep yet -- it hasn't been published to npm.
 
-Another issue is that if you change package.json in `dep`, namely changing a dependency or modifying the `files` entry, you have to run `cd dep; yarn knit; cd app; yarn knit dep`. Same if you add a file at the top level of the dependency since each file is linked individually.
+Another issue is that if you change package.json in `dep`, namely changing a dependency or modifying the `files` entry, you have to run `cd dep; yarn knit; cd app; yarn knit dep`. Same if you add a file at the top level of the dependency since each file is linked individually. This isn't so bad as those changes are probably more rare than saving changes to existing files.
 
 Also, if you update the code in dep and bump its version, say from 1.0.0 to 1.1.0, the symlinks in ~/.yarn-knit/dep-1.0.0 will still point to the code in your working directory, which now contains 1.1.0 code.
 
-The symlinks might break but I think that's mostly OK since at that point you're done working on dep and have published it to npm and it's easy to go run yarn add dep in app and not use the symlinks anymore.
+The symlinks might break but I think that's mostly OK since at that point you're done working on dep and have published it to npm and it's easy to go run `yarn add dep` in app and not use the symlinks anymore.
 
 If you want to truly pin the versions of knitted packages then you'd need to have a different working directory for each version. (Git worktrees are great for this use case actually. Worktrees let you check out a repo once and then magically create semi-clones of it in separate directories, with the constraint that the worktrees need to be on different branches, which is totally OK in this scenario. The worktrees all share the same Git repo though, so if you commit in one worktree you can cherry pick that commit within another worktree.)
 
