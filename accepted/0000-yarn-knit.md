@@ -60,7 +60,7 @@ This behaves like normal `yarn install` but automatically links any dependencies
 
 There are already several ways of linking dependencies in Yarn. This section is a comparison of them, and explains why `yarn knit` is still valuable to add.
 
-* `yarn link` is similar to `yarn knit` but links directories instead of files. This means that any `node_modules` inside linked dependencies are also included, breaking the flattened and deduped tree that yarn normally provides. Many other differences have already been discussed in this RFC.
+* `yarn link` is similar to `yarn knit` but links directories instead of files. This means that any `node_modules` inside linked dependencies are also included, breaking the flattened and deduped tree that yarn normally provides. Many other differences have already been discussed in this RFC. Ideally, the behavior of `yarn link` would be what is proposed in this RFC, but for backwards compatibility and to match the behavior of `npm link`, `yarn link` would stay around as is.
 
 * `link://` dependencies are similar to `yarn link` but actually closer to what `yarn knit` would provide. `link://` dependencies also cause the linked module's dependencies to be installed locally, so as long as there is no `node_modules` folder inside the linked dependency, it would work identically to `yarn knit dep`. The existing implementation of `link://` dependencies could be used to implement `yarn knit dep`.
 
