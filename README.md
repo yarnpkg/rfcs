@@ -56,7 +56,7 @@ is 'active' and may be implemented with the goal of eventual inclusion
 into Yarn.
 
 * Fork the RFC repo http://github.com/yarnpkg/rfcs
-* Copy `0000-template.md` to `text/0000-my-feature.md` (where
+* Copy `0000-template.md` to `accepted/0000-my-feature.md` (where
 'my-feature' is descriptive. don't assign an RFC number yet).
 * Fill in the RFC. Put care into the details: **RFCs that do not
 present convincing motivation, demonstrate understanding of the
