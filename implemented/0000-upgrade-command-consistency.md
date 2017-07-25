@@ -1,5 +1,5 @@
 - Start Date: 2017-06-21
-- RFC PR: n/a
+- RFC PR: https://github.com/yarnpkg/yarn/pull/3847
 - Yarn Issue: https://github.com/yarnpkg/yarn/issues/3603
 
 # Summary
