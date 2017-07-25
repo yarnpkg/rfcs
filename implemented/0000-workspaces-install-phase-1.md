@@ -41,9 +41,9 @@ The structure of the source code is following
 | ---- package.json
 | ---- packages/
 | -------- babel-jest/
-| ------------ packjage.json
+| ------------ package.json
 | -------- babel-preset-jest/
-| ------------ packjage.json
+| ------------ package.json
 ...
 ```
 
@@ -122,7 +122,7 @@ The algorithm is the same as in Yarn's [hoisting algorithm](https://github.com/y
 
 In the example above babel-core is used in both top level package.json and one of the workspaces.
 Yarn will resolve the highest possible common version and install it.
-If versions are conflicting Yarn will install install the most common used one at the root level and install the other versions in each of workspaces folder.
+If versions are conflicting Yarn will install the most common used one at the root level and install the other versions in each of the workspaces folder.
 
 This should be enough for Node.js to resolve required dependencies when running in each of the workspaces.
 
