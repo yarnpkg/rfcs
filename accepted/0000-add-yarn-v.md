@@ -8,7 +8,7 @@ Add `yarn -v` command
 
 # Motivation
 
-When i type in console `yarn -v` I expect to see installed version of yarn, as in most of other command applications. Instead, as I understood, if command not determined, yarn runs `yarn install`.
+When i type in console `yarn -v` I expect to see installed version of yarn (like with `yarn --version`), as in most of other command applications. Instead, as I understood, if command not determined, yarn runs `yarn install`.
 
 # Drawbacks
 
