@@ -43,3 +43,4 @@ A separate binary `yr` with this behaviour
 
 - will the installed package be installed globally
 - is the name good
+- how does this conflict with `yarn create`
