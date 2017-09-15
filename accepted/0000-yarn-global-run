@@ -37,6 +37,8 @@ Npx already exists and fills this position for now.
 Adding a flag like `--exact` to `yarn create` so that the `create-` prefix isn't 
 automatically added
 
+A separate binary `yr` with this behaviour
+
 # Unresolved questions
 
 - will the installed package be installed globally
