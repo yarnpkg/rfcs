@@ -25,13 +25,11 @@ Let me know if this isn't enough, first time writing an RFC.
 
 As a dev that generated their lock file against REGISTRY_A
 I would like to pass a cli flag designating REGISTRY_B
-And if REGISTRY_A doesn't exist or is unavailable
-I would like yarn to download my dependencies from REGISTRY_B
+And I would like yarn to download my dependencies from REGISTRY_B
 
 As a dev that generated their lock file against REGISTRY_A
 I would like to overwrite my `.yarnrc` or `.npmrc` designating REGISTRY_B
-And if REGISTRY_A doesn't exist or is unavailable
-I would like yarn to download my dependencies from REGISTRY_B
+And I would like yarn to download my dependencies from REGISTRY_B
 
 # How We Teach This
 
