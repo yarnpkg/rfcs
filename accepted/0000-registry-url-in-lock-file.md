@@ -22,14 +22,28 @@ The expected output is for yarn to recognise the registry URL supplied (via eith
 
 Let me know if this isn't enough, first time writing an RFC.
 
-
 As a dev that generated their lock file against REGISTRY_A
 I would like to pass a cli flag designating REGISTRY_B
 And I would like yarn to download my dependencies from REGISTRY_B
 
 As a dev that generated their lock file against REGISTRY_A
-I would like to overwrite my `.yarnrc` or `.npmrc` designating REGISTRY_B
-And I would like yarn to download my dependencies from REGISTRY_B
+I would like to designate an alternate registry URL in my `.yarnrc` or `.npmrc` (REGISTRY_B)
+And I would like yarn to download my dependencies from the alternate URL (REGISTRY_B)
+
+I feel like the simplest solution would be to add a "hash" or "commit-ish" field to entries.
+
+```
+abbrev@1:
+  version "1.1.0"
+  hash "d0554c2256636e2f56e7c2e5ad183f859428d81f"
+  resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.0.tgz#d0554c2256636e2f56e7c2e5ad183f859428d81f"
+```
+
+This, with the version already provided, could then be used to generate a URL on the fly or at the beginning of operations if an alternate registry is specified in the scenarios above.
+
+Or, the `resolved` field could change to not include the hostname/origin, which would then be inserted during operations. This would
+probably have implications for backwards compatibility though.
+
 
 # How We Teach This
 
