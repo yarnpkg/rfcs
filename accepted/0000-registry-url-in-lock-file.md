@@ -17,10 +17,37 @@ our download to error as yarn cannot retrieve the packages.
 The expected output is for yarn to recognise the registry URL supplied (via either cli flag or
 `.yarnrc` or `.npmrc`) and download from that if the registry used in the lock file is not available.
 
+The cli flag would be `override-registry`, to which an object can be passed to transform the registry requests.
+
+The entry in the `.yarnrc` or `.npmrc` would also be `override-registry`
+
+See "Detailed Design" for values it would receive.
+
+### Example yarn entries
+
+**Development Environment yarn.lock**
+```
+ansi-regex@^2.0.0:
+  version "2.1.1"
+  resolved "https://mydev.registry.com/ansi-regex/-/ansi-regex-2.1.1.tgz#c3b33ab5ee360d86e0e628f0468ae7ef27d654df"
+
+ansi-styles@^2.2.1:
+  version "2.2.1"
+  resolved "https://mydev.registry.com/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
+```
+
+**Build Environment yarn.lock**
+```
+ansi-regex@^2.0.0:
+  version "2.1.1"
+  resolved "https://mybuild.registry.com/ansi-regex/-/ansi-regex-2.1.1.tgz#c3b33ab5ee360d86e0e628f0468ae7ef27d654df"
+
+ansi-styles@^2.2.1:
+  version "2.2.1"
+  resolved "https://mybuild.registry.com/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
+```
 
 # Detailed design
-
-Let me know if this isn't enough, first time writing an RFC.
 
 As a dev that generated their lock file against REGISTRY_A
 I would like to pass a cli flag designating REGISTRY_B
@@ -30,20 +57,24 @@ As a dev that generated their lock file against REGISTRY_A
 I would like to designate an alternate registry URL in my `.yarnrc` or `.npmrc` (REGISTRY_B)
 And I would like yarn to download my dependencies from the alternate URL (REGISTRY_B)
 
-I feel like the simplest solution would be to add a "hash" or "commit-ish" field to entries.
+Based on feedback received, we shouldn't be modifying the yarn.lock file. Developers can provide
+an `override-registry` option in either the cli or the `.yarnrc` or `.npmrc`
+
+Example object would be `{"<generated-registry-entry>": "<registry-to-request-from>"}`
+
+**Examples based on above [yarn entries](#example-yarn-entries)**
 
 ```
-abbrev@1:
-  version "1.1.0"
-  hash "d0554c2256636e2f56e7c2e5ad183f859428d81f"
-  resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.0.tgz#d0554c2256636e2f56e7c2e5ad183f859428d81f"
+// cli
+yarn --override-registry={"mydev.registry.com": "mybuild.registry.com"}
 ```
 
-This, with the version already provided, could then be used to generate a URL on the fly or at the beginning of operations if an alternate registry is specified in the scenarios above.
+```
+// .npmrc or .yarnrc
+override-registry={"mydev.registry.com": "mybuild.registry.com"}
+```
 
-Or, the `resolved` field could change to not include the hostname/origin, which would then be inserted during operations. This would
-probably have implications for backwards compatibility though.
-
+Using the example above, when this override is provided, the packages would get downloaded from "mybuild.registry.com"
 
 # How We Teach This
 
