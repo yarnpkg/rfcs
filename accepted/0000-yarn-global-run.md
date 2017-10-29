@@ -45,6 +45,8 @@ Yarn create can use a package without `create-` prefix if it doesn't exist
 
 > This could be having a "confirm" prompt
 
+`yarn exec`
+
 # Unresolved questions
 
 - will the installed package be installed globally
