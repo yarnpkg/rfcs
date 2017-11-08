@@ -97,6 +97,13 @@ workspaces = {
 ```
 IMHO, option-1 is more intuitive, elegant and extensible. However, workspaces might not be private packages. @bestander has mentioned the concern about non-yarn use cases, I added more thoughts in [discussion #1](#discussion-1). If this turns out to be a real issue, we could always fallback to option-2. 
 
+### exceptions
+The following packages will ignore the nohoist instruction:
+- workspaces
+- linked packages
+
+Basically the symlink-packages will always be hoisted because they are not copied hence can't honor the nohoist instruction.
+
 ## nohoist logic outline
 
 all of the nohoist logic (minus the config) is implemented in `src/package-hoist.js`:
