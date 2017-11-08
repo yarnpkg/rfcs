@@ -104,6 +104,26 @@ The following packages will ignore the nohoist instruction:
 
 Basically the symlink-packages will always be hoisted because they are not copied hence can't honor the nohoist instruction.
 
+for example: 
+```
+// workspace-2 package.json
+dependencies: {
+    "a": "1.0.0",
+    "workspace-1": "1.0.0"
+}
+workspaces: {
+    "nohoist": ["_all_"]
+}
+```
+workspace-1 will ignore "nohoist" specified by workspace-2, so the final file structure will look like this:
+```
+root/node_modules/
+    workspace-1
+    workspace-2/node_modules/a
+```
+
+note: I have considered alternatively to create  `workspace-2/node_modules/workspace-1` as a symlink to workspace-1, but then realized if there are multiple workspaces referencing workspace-1 with conflicting nohoist rules, the shared workspace-1 can't satisfy all of them and will appear "wrong" if you just follow the symlinks... Therefore, I think it might be easier to just mark these linked-packages to be not-nohoist-able, i.e. they will always be hoisted regardless of the nohoist config.
+
 ## nohoist logic outline
 
 all of the nohoist logic (minus the config) is implemented in `src/package-hoist.js`:
