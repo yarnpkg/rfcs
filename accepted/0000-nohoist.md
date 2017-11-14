@@ -62,15 +62,15 @@ note: the config will be backward compatible.
 ### nohoist list inheritance
 nohoist config is inherited, i.e. if nohoist is specified in the root package.json, all workspaces will inherit the nohoist list, likewise all the dependencies of the workspace will inherit the nohoist list. This concept is simple and useful not only in reasoning nohoist from root to workspaces, it can be extended downwards to allow packages provide better monorepo support as well as easily handling deep-dependency as direct-dependency. 
 
-### nohoist list naming
-lerna uses glob pattern to specify nohoist package, however based on the design principle, I argue it is probably better not to since nohoist should be "rare", therefore probably doesn't justify for extra matching complexity and risk. 
+### nohoist list matching
+The current workspaces implementation uses glob pattern for naming the packages. After discussing with @bestander, I agree we could just extend the same pattern matching for nohoist list package names. 
 
-However, it is not feasible to ask developers mark off every package if they just want to opt-out hoisting all together, therefore a simple keyword like "\_all\_" should be introduced to handle use-case-3 easily. For example the following config will basically turn off nohoist for the whole monorepo project:
+For example the following config will basically turn off nohoist for the whole monorepo project:
 ```
 // root packages.json
 workspaces = {
     packages: ['workspace-a', 'workspace-b'],
-    nohoist: ['_all_']
+    nohoist: ['*']
 }
 ```
 
@@ -84,7 +84,7 @@ for example, to only disable hoisting for workspace-a:
 ```
 // workspace-a package.json
 workspaces = {
-    nohoist: ['_all_']
+    nohoist: ['*']
 }
 ```
 **option-2: in root package.json**:
@@ -92,7 +92,7 @@ workspaces = {
 // root package.json
 workspaces = {
     packages: ['workspace-1', 'workspace-b']
-    nohoist: {'workspace-1': ['_all_']}
+    nohoist: {'workspace-1': ['*']}
 }
 ```
 IMHO, option-1 is more intuitive, elegant and extensible. However, workspaces might not be private packages. @bestander has mentioned the concern about non-yarn use cases, I added more thoughts in [discussion #1](#discussion-1). If this turns out to be a real issue, we could always fallback to option-2. 
@@ -112,7 +112,7 @@ dependencies: {
     "workspace-1": "1.0.0"
 }
 workspaces: {
-    "nohoist": ["_all_"]
+    "nohoist": ["*"]
 }
 ```
 workspace-1 will ignore "nohoist" specified by workspace-2, so the final file structure will look like this:
@@ -199,7 +199,7 @@ _note: only the package explicitly called out in nohoist list will be excluded f
 ```
 // workspace-a package.json
 workspaces = {
-    nohoist: ['_all_']
+    nohoist: ['*']
 }
 ```
 the file structure will look like this:
@@ -219,7 +219,7 @@ the file structure will look like this:
 // root package.json
 workspaces = {
     workspaces = ['workspace-a', 'workspace-b'],
-    nohoist: ['_all_']
+    nohoist: ['*']
 }
 ```
 the file structure will look like this:
@@ -268,10 +268,13 @@ Let's say a user project A has a dependency on a public package B, which has a d
 |--|--|--|
 |A doesn't use yarn or workspace|no impact|no impact|
 |A uses yarn workspace|react-native will be excluded from hoisting without A doing anything|A needs to discover then put both B and react-native in its own workspaces.nohoist|
-|A uses yarn workspaces but excluded \_all\_|no impact, none will be hoisted|no impact, none will be hoisted|
+|A uses yarn workspaces but excluded all packages from hoisting|no impact, none will be hoisted|no impact, none will be hoisted|
 |A uses yarn workspaces but do not want to exclude react-native from hoisting (why?)|conflict! but the public package B is right and react-native should be excluded.|no conflict but B will most likely failed|
 
 In short, having unnecessary nohoist packages might cause inefficiency, but missing a necessary nohoist will lead to compile/execution error.
+
+[update 11/13/17]
+After further discussion, I agree that to have an option guarding nohoist from public package is a safer approach so users can turn off nohoist along with workspaces feature. It is not clear to me if we need a new flag to handle nohoist opt-out separately from workspaces. A nohoist without workspaces is meaningless because nohoist is essentially part of the workspace hoisting scheme. If we do have use cases to override specific public package's nohoist, a generic flag might not be sufficient... Therefore, suggest we hold off on any complex addition until seeing a concrete use case, mean while just use the existing `workspaces-experimental` to safe guard workspaces as a whole.
 
 ## discussion-2
 **should the new hoisted package retain nohoist list?**
@@ -294,6 +297,10 @@ workspace-a
 A -> B
 ```
 IMHO, option-2 is more confusing than option-1. We can reason the nohoist inheritance is based on the dependency tree, once the tree is broken (by hoisting), so should the nohoist list inheritance. But I am open for better arguments.
+
+[update 11/13/17]
+After further discussion, I realized option-2 is not a viable alternative: 
+> Because a hoisted package can be "originated" from multiple sources that might have conflicting nohoist rules, therefore, inheritance-from-source is problematic.
 
 ## unit tests failed on mac
 this is not related to nohoist issue specifically, but made submitting PR much more difficult and time consuming. Many async integration tests failed on my laptop (mac) for even a fresh clone. Is this a known issue? any suggestion or workaround?
