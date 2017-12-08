@@ -124,6 +124,11 @@ _project_/node_modules
 ``` 
 This allow both workspaces to have their own hoisting rules. Same thing should apply to linked modules.
 
+## nohoist safe guard
+nohoist is still an experimental feature, there are 2 things to limit its scope:
+1. user can turn nohoist off by specifying `workspaces-nohoist-experimental = false`.
+1. nohoist can only be used in private package for now until we learn more about how it is used. yarn will look for explicit `private: true` in the project.json where nohoist is specified.
+
 ## nohoist logic outline
 
 all of the nohoist logic (minus the config) is implemented in `src/package-hoist.js`:
@@ -268,6 +273,9 @@ Here are the reasons I choose path like syntax:
 
 None of them is hard to overcome, we just need to decide a format then adapt the rest. 
  
+[update 12/7/17]
+per our discussion, standardizing path separator should be discussed in a separate RFC, thus revert to the current separator: "#' during display for consistency.
+
 ## is allowing nohoist in public package bad?
 
 As mentioned earlier, nohoist only impact yarn hoisting, for other package managers, it's a no-op and should be able to safely ignored... maybe I am missing some problematic use cases, here is what I got:
@@ -286,5 +294,10 @@ In short, having unnecessary nohoist packages might cause inefficiency, but miss
 [update 11/13/17]
 After further discussion, I agree that to have an option guarding nohoist from public package is a safer approach so users can turn off nohoist along with workspaces feature. It is not clear to me if we need a new flag to handle nohoist opt-out separately from workspaces. A nohoist without workspaces is meaningless because nohoist is essentially part of the workspace hoisting scheme. If we do have use cases to override specific public package's nohoist, a generic flag might not be sufficient... Therefore, suggest we hold off on any complex addition until seeing a concrete use case, mean while just use the existing `workspaces-experimental` to safe guard workspaces as a whole.
 
+[update 12/7/17]
+per our discussion, in order to start safely, we will limit the nohoist scope to private packages only. Giving `workspaces-experimental` will be retired soon, we will add a new  `workspaces-nohoist-experimental` flag for users to opt-out nohoist if needed.
+
 ## unit tests failed on mac
 this is not related to nohoist issue specifically, but made submitting PR much more difficult and time consuming. Many async integration tests failed on my laptop (mac) for even a fresh clone. Is this a known issue? any suggestion or workaround?
+
+
