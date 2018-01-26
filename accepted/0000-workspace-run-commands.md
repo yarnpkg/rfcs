@@ -35,11 +35,9 @@ Additionally, we can pass a `--filter` argument followed by a workspace name. In
 
 ## `yarn workspaces run <command>`
 
-This command will execute the specified command in all the packages under the workspace. Before we run the scripts, it should make sure that all packages has the script specified in the package.json. Otherwise, it should throw an error specifying which pacakge is missing that script.
+This will execute the specified `<command>` in all workspaces. For a _fail fast_ operation, we could traverse all the workspaces to check whether the specified command exists within that workspace, before we actually start executing. If not found, display an error with which workspace is missing that command.
 
-Just like the `list` command, by default, it'll select the first workspace in case of no workspace name is provided.
-
-The important thing here to note that the ordering of the execution. It must be executed in the same dependency order. This will assure that we could use a single "build" that builds inter-dependant packages without any problem.
+The ordering of execution is also important. It must be executed _topologically_. So that it won't break the inter-dependant workspaces.
 
 # How We Teach This
 
