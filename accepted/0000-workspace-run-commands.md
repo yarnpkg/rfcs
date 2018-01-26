@@ -1,62 +1,63 @@
-- Start Date: 2017-09-21
-- RFC PR:
-- Yarn Issue:
+* Start Date: 2017-09-21
+* RFC PR:
+* Yarn Issue:
 
 # Summary
 
-Allow Yarn CLI to execute a package script on each packages from the workspace root.  
+Allow Yarn CLI to execute a package script on each packages from the workspace root.
 
-# Motivation  
+# Motivation
 
-"Lerna". Lerna does a great job for handling monorepos. Since Yarn has a built-in 
-workspaces feature, we could use some of the functionalities that being used in 
-lerna (not entirely though!) for handling the monorepo more efficiently.  
+"Lerna". Lerna does a great job for handling monorepos. Since Yarn has a built-in
+workspaces feature, we could use some of the functionalities that being used in
+lerna (not entirely though!) for handling the monorepo more efficiently.
 
-Just like installing all dependencies from one place (workspace root), it'd be great 
-to execute all the sub-package scripts from the workspace root using a single command. 
-Not only this would make a less back-and-forth traveling between the packages to 
-execute scripts, but also it'll help a lot for CI/CD configuration. 
+Just like installing all dependencies from one place (workspace root), it'd be great
+to execute all the sub-package scripts from the workspace root using a single command.
+Not only this would make a less back-and-forth traveling between the packages to
+execute scripts, but also it'll help a lot for CI/CD configuration.
 
+# Detailed design
 
-# Detailed design  
+As @BYK mentioned [here](https://github.com/yarnpkg/yarn/issues/4467#issuecomment-330873337),
+we could create two commands for this feature.
 
-As @BYK mentioned [here](https://github.com/yarnpkg/yarn/issues/4467#issuecomment-330873337), 
-we could create two commands for this feature.  
-
-* `yarn workspaces list`  
-* `yarn workspaces run <command>`  
-* `yarn workspaces add <workspace_name>`  
+* `yarn workspaces list`
+* `yarn workspaces run <command>`
+* `yarn workspaces add <workspace_name>`
 * `yarn workspace remove <workspace_name> --opts`
 
-By introducing `workpaces` command, it brings a modular approach from the CLI's perspective.  
+By introducing `workpaces` command, it brings a modular approach from the CLI's perspective.
 
-## `yarn workspaces list`  
+## `yarn workspaces list --args`
 
-This command lists out the package names inside that workspace.  In the case of multiple workspace configuration, we'll need to pass the workspace name like `yarn workspaces <workspace_name> list`. By defaut, when no workspace name is not given, it'll pick the first workspace name from the root package.json.  
+This command will list out all the packages for all the workspaces (alphabetically). If no workspace is found, this will fail with error.
 
-## `yarn workspaces run <command>`  
+Additionally, we can pass a `--filter` argument followed by a workspace name. In that case, it'll list out all the package inside that specified workspace.
 
-This command will execute the specified command in all the packages under the workspace. Before we run the scripts, it should make sure that all packages has the script specified in the package.json. Otherwise, it should throw an error specifying which pacakge is missing that script.  
+## `yarn workspaces run <command>`
 
-Just like the `list` command, by default, it'll select the first workspace in case of no workspace name is provided.  
+This command will execute the specified command in all the packages under the workspace. Before we run the scripts, it should make sure that all packages has the script specified in the package.json. Otherwise, it should throw an error specifying which pacakge is missing that script.
 
-The important thing here to note that the ordering of the execution. It must be executed in the same dependency order. This will assure that we could use a single "build" that builds inter-dependant packages without any problem.  
+Just like the `list` command, by default, it'll select the first workspace in case of no workspace name is provided.
 
+The important thing here to note that the ordering of the execution. It must be executed in the same dependency order. This will assure that we could use a single "build" that builds inter-dependant packages without any problem.
 
-## `yarn workspaces add <workspace_name>`  
+## `yarn workspaces add <workspace_name>`
 
-This would create the folder if it doesn't exist and make sure it is included in the top-level `workspaces` config.  
+This would create the folder if it doesn't exist and make sure it is included in the top-level `workspaces` config.
 
-## `yarn workspace remove <workspace_name> --opts`  
+## `yarn workspace remove <workspace_name> --opts`
 
 Remove a specific workspace from the config. And by passing `-D` as an option, it'll delete the folder.
-# How We Teach This  
 
-Since this is a new feature and doesn't affect existing functionalities, it shouldn't affect existing/new users. However, a slight documentation should be written under the workspace CLI.  
+# How We Teach This
+
+Since this is a new feature and doesn't affect existing functionalities, it shouldn't affect existing/new users. However, a slight documentation should be written under the workspace CLI.
 
 # Drawbacks
 
-Complexity. Especially while executing the package scripts. We need to keep track of the package dependencies.  And also, there's already a library (lerna) does the same thing and is compatible with yarn without any extra configuration.  
+Complexity. Especially while executing the package scripts. We need to keep track of the package dependencies. And also, there's already a library (lerna) does the same thing and is compatible with yarn without any extra configuration.
 
 # Alternatives
 
