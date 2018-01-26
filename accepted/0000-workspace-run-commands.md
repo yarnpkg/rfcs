@@ -24,8 +24,6 @@ we could create two commands for this feature.
 
 * `yarn workspaces list`
 * `yarn workspaces run <command>`
-* `yarn workspaces add <workspace_name>`
-* `yarn workspace remove <workspace_name> --opts`
 
 By introducing `workpaces` command, it brings a modular approach from the CLI's perspective.
 
@@ -42,14 +40,6 @@ This command will execute the specified command in all the packages under the wo
 Just like the `list` command, by default, it'll select the first workspace in case of no workspace name is provided.
 
 The important thing here to note that the ordering of the execution. It must be executed in the same dependency order. This will assure that we could use a single "build" that builds inter-dependant packages without any problem.
-
-## `yarn workspaces add <workspace_name>`
-
-This would create the folder if it doesn't exist and make sure it is included in the top-level `workspaces` config.
-
-## `yarn workspace remove <workspace_name> --opts`
-
-Remove a specific workspace from the config. And by passing `-D` as an option, it'll delete the folder.
 
 # How We Teach This
 
