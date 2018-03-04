@@ -32,6 +32,7 @@ relevant yarn commands should be able to be run with an `--isolated` flag.
 
 Relevant commands (based on current functionality) include
 - install
+- add
 - upgrade
 - upgrade-interactive
 - outdated
@@ -46,9 +47,8 @@ If you run a command with the isolated flag and are in a workspaceDir, it will r
 
 If you run a command with the isolated flag but you are at the rootDir (or any other directory not underneath a workspaceDir), it will give an error saying that the isolated flag can only be used inside an individual workspace.
 
-## Command behavior
+## Command behavior with isolated flag
 ### install
-#### With isolated flag
 Install only that package's dependencies, and do not hoist them to the rootDir. Install dependencies on other
 workspaces from registry instead of using the local version. 
 
@@ -56,26 +56,20 @@ It should still use the rootDir's lockfile since adding lockfiles for each works
 across workspaces. Since other workspaces will not be in the lockfile, it should determine their versions as if it was 
 installing without a lockfile (by taking the newest version that matches their semver).
 
-#### Changes to current (non-isolated) behavior
-If a dependency was previously installed in a workspaceDir (from an isolated installation) and will be hoisted, delete it from the workspaceDir. This should not be a breaking change since the end result would be the same as if the isolated flag did not exist or if you were installing from scratch.
+Since install will not take into account other workspaces, it would change the lockfile if allowed to. To avoid this, it should prevent lockfile changes as if `--pure-lockfile` was passed. This behavior should be documented clearly with the option.
+
+### add
+Add the dependency to the workspace's package.json and add update yarn.lock (at the root) to take this new dependency into account. Install the dependency (and any new transitive dependencies) in the workspace's node_modules folder. 
 
 ### upgrade
-#### With isolated flag
 Upgrade all dependencies of the workspace in the root yarn.lock, respecting semvers of the current workspace and also
 every other workspaces. Install all dependencies for the current workspace in its node_modules, not hoisting anything
-to the root. Take the latest matching versions from the registry for all dependencies on other workspaces.
-
-#### Changes to current behavior. 
-Deleting modules installed at an individual workspaceDir if they are going to be hoisted (similar to changes for `install`).
+to the root. Take the latest matching versions from the registry for all dependencies on other workspaces. Do not install dependencies for other workspaces that are not needed for the current one. 
 
 ### upgrade-interactive
-#### With isolated flag
 Interactive version of an isolated upgrade. Bring up the interactive prompt, only showing the workspace's dependencies.
 Record upgrades in the root yarn.lock. Install all dependencies for the current workspace in its node_modules, not hoisting anything
 to the root. Take the latest matching versions from the registry for all dependencies on other workspaces.
-
-#### Changes to current behavior. 
-None except the changes to `upgrade`. Still just an interactive version of `upgrade`.
 
 ### outdated
 #### With isolated flag
@@ -85,19 +79,11 @@ Should show the list of packages that upgrade-interactive would show with isolat
 None.
 
 ### check
-#### With isolated flag
 Verify the workspace's package.json against the root yarn.lock file. Use the workspace node_modules (not hoisted) when looking
 at actual package contents.
 
-#### Changes to current behavior. 
-None.
-
 ### list
-#### With isolated flag
 List only dependencies needed by the current workspace.
-
-#### Changes to current behavior. 
-None.
 
 # How We Teach This
 
