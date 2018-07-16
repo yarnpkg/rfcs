@@ -70,3 +70,6 @@ Actually, I didn’t get on what files that checksum has been calculated.
 Anyway, it does not prevent the author to publish malicious code on NPM's registry.
 
 # Unresolved questions
+
+# Prior Art:
+Cargo does something like SNPM: https://doc.rust-lang.org/cargo/reference/publishing.html#github-permissions
