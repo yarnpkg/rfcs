@@ -138,3 +138,5 @@ running `yarn` first?
 How does this command works when ran before a merge conflict in yarn.lock is resolved?
 
 What is the source of truth? The `yarn.lock` and `package.json` files or the actually installed packages?
+
+How to treat circular dependencies?
