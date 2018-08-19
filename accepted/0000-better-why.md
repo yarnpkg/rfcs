@@ -14,7 +14,7 @@ useful in several cases.
 
 ## Really understand why a dependency got installed
 
-The current version of `yarn why` does not really tells why a dependency is installed,
+The current version of `yarn why` does not really tell why a dependency is installed,
 you will need to run it recursively.
 The current version of the command is scoped to the package name. When two versions
 of the same package are installed, I would like to understand why a given version is installed.
