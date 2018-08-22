@@ -30,7 +30,7 @@ The `resolved` field will not be used to determine which registry is used. Chang
 
 Yarn supports configuring a registry for a specific scope (e.g. `yarn config set '@foo:registry' 'https://registry.foo.com'`). If a scoped registry has been configured, then this registry shall be used for **all** packages under that scope. Using different registries within a single scope is not supported.
 
-### Can non-scoped packages use alternate registries?
+### Can I configure a specific non-scoped package use an alternate registry?
 
 No, non-scoped packages would all use the same registry. This restriction simplifies the configuration, and keeps us in line with `npm`.
 
