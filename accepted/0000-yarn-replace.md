@@ -10,7 +10,7 @@ Add new subcommand, `yarn replace`, which removes one package and adds one packa
 
 Often, developers find themselves in situations where they try out one package just to find that the package is not useful for them and they want to try another package instead.
 
-Currently, the workflow for this is to execute `yarn remove <old-package>` and `yarn add <new-package>` sequentially. By having to execute two commands, native packages recompilation and other redundant have to be executed twice, resulting in a timewaste.
+Currently, the workflow for this is to execute `yarn remove <old-package>` and `yarn add <new-package>` sequentially. By having to execute two commands, native packages recompilation and other redundant tasks have to be executed twice, resulting in a timewaste.
 
 I believe `yarn remove <old-package> && yarn add <new-package>` is something that developers do commonly. Having a shorthand for these types of operation would also save time for typing.
 
@@ -54,7 +54,8 @@ N/A
 
 # Unresolved questions
 
-Which parts of `yarn remove` and `yarn add` are exactly redundant? I can think of:
+Which parts of `yarn remove` and `yarn add` are exactly 
+dant? I can think of:
 – Bootup of Yarn
 – Writing of Lockfile
 – Writing of package.json
