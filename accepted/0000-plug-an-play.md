@@ -130,7 +130,7 @@ Where some projects were spending more than two minutes running (like is the cas
 
 ### C. users working on multiple projects across a system won't pay increasing install costs
 
-A common occurence in the Javascript world is developers working on multiple disconnected projects sharing similar dependencies (for example all projects created through `create-react-app`). Due to how package managers currently work, the files used by those projects were typically copied from the cache into multiple `node_modules`, multiplying both the total size of the installs on the disk and the time wasted running installs.
+A common occurrence in the Javascript world is developers working on multiple disconnected projects sharing similar dependencies (for example all projects created through `create-react-app`). Due to how package managers currently work, the files used by those projects were typically copied from the cache into multiple `node_modules`, multiplying both the total size of the installs on the disk and the time wasted running installs.
 
 Now that the files are read directly from the cache, no matter your system, you'll only ever pay the cost of having multiple projects once. This multi-megs project is much more bearable now that you know that its dependencies will be reused by all other projects on your machine now.
 
@@ -233,7 +233,7 @@ The `require.resolve` function is problematic in that it does two things in one:
 
 The reason this is a problem is that both of those actions don't have the same meaning and as such interfere with each other. The symlinks used for the virtual packages implementation referenced in Section 3 are a direct consequence of this: while it would be possible to implement this concept by making `require.resolve` create and return special in-memory identifiers that `require` would be able to understand, it wouldn't be possible to use those identifiers as paths (unless we were to patch the `fs` module, which is totally unacceptable).
 
-A fix would be to split require.resole in two:
+A fix would be to split `require.resolve` in two:
 
 * `require.resolve.virtual`: would convert a request into an implementation-defined object ready for consumption by `require` and `require.resolve.physical`
 * `require.resolve.physical`: would convert a request (or one of the values returned by `require.resolve.virtual`) into a filesystem path
@@ -285,7 +285,7 @@ interface {
 * A package **MUST NOT** be able to require a package that isn't listed in its dependency detail. The dependency detail is the sum of `dependencies` and `peerDependencies` for all packages, plus `devDependencies` for the top level package if running in development mode.
     * An exception is made if the package being required is listed in the dependency detail of the top-level. In this case, the package making the request will obtain the exact same **instance** than if the top-level package had made the require call (note the emphasis on instance rather than version).
     * We however discourage packages from relying on this exception, since it's only been implemented to lower the adoption cost and help plugin systems. Packages should prefer using `peerDependencies` if applicable.
-* Two packages depending on the same reference of the same dependency that itself has a transitive peer dependency **MUST** get the exact same instance of this dependency, whatever their locations in the dependency tree are.
+* Two packages depending on the same reference of the same dependency that *doesn't* have any transitive peer dependencies **MUST** get the exact same instance of this dependency, whatever their locations in the dependency tree are.
 * Two packages depending on the same reference of the same dependency that itself has a transitive peer dependency **MUST** get different instances of this dependency.
 
 The comprehensive list of guarantees can also be extracted from the “it should” statements that can be found on the Plug'n'Play test suite.
