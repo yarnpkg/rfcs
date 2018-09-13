@@ -149,7 +149,7 @@ In this situation, even though it is found multiple times inside the dependency 
 
 Since Plug'n'Play flattens the dependency tree while still preserving the links between the nodes, the paths Node will get will be the same for any `package-c@1.0.0` inside the dependency tree, causing the package to be instantiated a single time.
 
-### A. users cannot require dependencies that aren't listed in their dependencies
+### E. users cannot require dependencies that aren't listed in their dependencies
 
 A common problem was that it was extremely easy for a library author to start relying on a package and forget listing it inside the dependencies. Because these broken dependencies were being pulled by dev dependencies before being hoisted to the top level, they often happened to work fine in development environments and break in production.
 
@@ -216,7 +216,7 @@ Some packages try to require packages they don't directly depend on for legit re
 
 In order to solve this, Plug'n'Play details a special case when a package makes a require call to a package it doesn't own but that the top-level has listed as one of its dependencies. In such a case, the require call will succeed, and the path that will be returned will be the exact same one as the one that would be obtained if the top-level package was making the call.
 
-### e. edit-in-place workflows need different tools
+### E. edit-in-place workflows need different tools
 
 A quite common debug pattern is to manually edit the `node_modules` files in order to alter the behavior of the program and debug it more easily (by adding `console.log` statements, for example). Since the `node_modules` folders don't exist anymore, this isn't directly possible anymore.
 
