@@ -81,7 +81,7 @@ note: the config will be backward compatible.
 considering the dependency as a virtual tree, the nohoist rule goes down the branch from where it is specified. For example, if nohoist is specified in the root package.json, all workspaces will inherit the nohoist list, likewise all the dependencies of the workspace will inherit the nohoist list. However if the nohoist is specified in workspace-1, the neighboring workspace-2 will not be impacted. 
 
 ### nohoist list matching
-Like the current workspaces.packages configuraton, we will use the same glob pattern match to locate nohoist packages. [minimatch](https://github.com/isaacs/minimatch) (the matching library used in yarn) supports many glob patterns, the most common ones for nohoist are probably the simple '*' and '**' patterns:
+Like the current workspaces.packages configuration, we will use the same glob pattern match to locate nohoist packages. [minimatch](https://github.com/isaacs/minimatch) (the matching library used in yarn) supports many glob patterns, the most common ones for nohoist are probably the simple '*' and '**' patterns:
 
 For example the following config will basically turn off nohoist for the whole monorepo project:
 ```
