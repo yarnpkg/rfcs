@@ -50,7 +50,7 @@ A special resolver is then able to leverage the knowledge extracted from those t
 
 In the end, while some package managers had some success with these strategies (shoutout to pnpm in particular which was one of the first package managers experimenting to solve those problems!), we envision an alternative approach that's working for us at large scale and that we hope will work for others as well.
 
-### generated api
+### Generated api
 
 A point needs to be made regarding what Plug'n'Play is. While the previous section described the way Yarn would now generate “static resolution tables”, those tables are not what make Plug'n'Play what it is - instead, they are an implementation detail amongst others. Instead, Plug'n'Play is first and foremost an API meant to abstract the resolution process and provide strict behavioral guarantees. In consequence, the resolution tables are useless without the resolver itself, since it's the resolver that is standardized, not the tables.
 
@@ -64,10 +64,10 @@ As an executable Javascript file, the generated `.pnp.js` file presents the foll
 * It doesn't have any dependency other than the built-in Node modules - it doesn't even depend on Yarn itself.
 * It exposes an API that can be used to programmatically query resolutions without having to parse the file or to load the full resolver. As mentioned, the implementation itself is entirely free as long as both the interface specified in Annex B and the contract listed in Annex C are fulfilled. This should leave enough room for experimentation while providing a consistent API that matches the current expectations of most packages.
 * It's an executable script that can act as a resolution daemon that other processes can communicate with through standard input / standard output using the protocol listed in Annex D (based on JSON). This makes it suitable for integration with third-party tools not written in Javascript - this allowed us for example [to introduce the `module.resolver` option into Flow](https://github.com/facebook/flow/commit/7b6738bdba7b6a4a5844c079d9dd1ddcf815effb). Flow is written in OCaml and cannot use the Javascript API, but thanks to this small bridge, it was only a matter of parsing a few lines of JSON.
-* If loaded as a preloaded module (`node -r ./.pnp.js`), it will inject itself into the Node environment and will transparently cause the `require` function to load files directly from the right location. The current implementation overrides `Module._load`, but Node 10 recently released a new API that we plan to use to register into the resolver.
+* If loaded as a preloaded module (`node -r ./.pnp.js`), it will inject itself into the Node environment and will transparently cause the `require` function to load files directly from the right location. It will also expose the Plug'n'Play API through the `pnpapi` name, that can be required from any package of the dependency tree. The current implementation overrides `Module._load`, but Node 10 recently released a new API that we plan to use to register into the resolver.
 * While not guaranteed strictly speaking (should it?), the `.pnp.js` file implemented by Yarn is stable through the use of relative paths. It means that the file can be moved from a computer to another and will still work as expected (provided that the cache folder on the new environment is both hot and located in the same path relative to the `.pnp.js` file). Through smart uses of the `.yarnrc` argument options, it becomes possible to store both the cache and the `.pnp.js` files together, allowing to skip the installs altogether and making Yarn optional.
 
-### workspaces & links
+### Workspaces & links
 
 Yarn supports adding persistent symlinks to your projects through two means: the first one, which we recommend, is to use the workspaces feature in order to create automatic links between your packages. The second one, which is a bit older, is to use the `link:` protocol and force Yarn to create a symlink to a location, regardless what's located there.
 
@@ -128,13 +128,13 @@ Now that files don't have to be copied anymore, efficient caching becomes a bree
 
 Where some projects were spending more than two minutes running (like is the case for react-native, for example), Plug'n'Play now allows them to spend this time actually running their tests, decreasing the load on the CIs and making for a better developer experience - we all hate waiting for the tests to end.
 
-### C. users working on multiple projects across a system won't pay increasing install costs
+### C. Users working on multiple projects across a system won't pay increasing install costs
 
 A common occurrence in the Javascript world is developers working on multiple disconnected projects sharing similar dependencies (for example all projects created through `create-react-app`). Due to how package managers currently work, the files used by those projects were typically copied from the cache into multiple `node_modules`, multiplying both the total size of the installs on the disk and the time wasted running installs.
 
 Now that the files are read directly from the cache, no matter your system, you'll only ever pay the cost of having multiple projects once. This multi-megs project is much more bearable now that you know that its dependencies will be reused by all other projects on your machine now.
 
-### D. “perfect” hoisting due to the removal of the filesystem limitations
+### D. “Perfect” hoisting due to the removal of the filesystem limitations
 
 An example will be worth a thousand words: let's say you have the following dependency tree:
 
@@ -149,7 +149,7 @@ In this situation, even though it is found multiple times inside the dependency 
 
 Since Plug'n'Play flattens the dependency tree while still preserving the links between the nodes, the paths Node will get will be the same for any `package-c@1.0.0` inside the dependency tree, causing the package to be instantiated a single time.
 
-### E. users cannot require dependencies that aren't listed in their dependencies
+### E. Users cannot require dependencies that aren't listed in their dependencies
 
 A common problem was that it was extremely easy for a library author to start relying on a package and forget listing it inside the dependencies. Because these broken dependencies were being pulled by dev dependencies before being hoisted to the top level, they often happened to work fine in development environments and break in production.
 
@@ -166,7 +166,7 @@ trying to require the package "foobar" (via "foobar") without it being listed in
 its dependencies (react, react-dom, foo)
 ```
 
-### F. package instantiations now obey strict & predictable rules
+### F. Package instantiations now obey strict & predictable rules
 
 As mentioned in the previous point, it happens that the hoisting may not be applied fully. But the thing is, it often can be. Which makes it impossible for a project to know for sure how many times it will be instantiated by Node, and plan accordingly.
 
@@ -179,7 +179,7 @@ The Plug'n'Play API makes it a goal to provide strong guarantees that library au
 >
 > Since it's been proven in the past that such undefined behaviors were still leading some libraries to make incorrect assumptions (as happened with packages crossing the `node_modules` boundaries, for example), we deemed it safer to enforce a stricter but entirely predictable and consistent behavior that library authors can rely on.
 
-### G. enforcing the boundaries leaves room for different implementations
+### G. Enforcing the boundaries leaves room for different implementations
 
 As detailed in section 6, Plug'n'Play is but the beginning of a long term project. As a result, we worked hard to make sure that the guarantees exposed in section 1 and the APIs detailed in section 3 weren't overly vast and would make it possible for us to change the way the Yarn Plug'n'Play resolver is implemented while still honoring the contract we set up.
 
@@ -187,7 +187,7 @@ Moreover, enforcing correctness will also make it easier for third-parties to wr
 
 ## 5. Potential New Issues
 
-### A. post install scripts considered harmful
+### A. Post install scripts considered harmful
 
 Post-install scripts are likely the biggest technical issue of Plug'n'Play. Since all packages are kept in the cache, build artifacts need to be stored there as well. While it might work for a single project, modifying files into the cache would still lead to cache corruptions, and would thus be unacceptable: it would cause issues when working on multiple projects sharing the same package with a post-install script, since they would each overwrite the files the others generated (which might be different since they can depend on a dependency of the package, which might be locked to different versions across multiple projects - think about a project using a Node-4-compiled version of node-sass that would conflict with a project using a Node-10-compiled version of this same package).
 
@@ -198,25 +198,25 @@ There's two ways this issue can be solved:
 
 As a data point, we encountered no problem at Facebook with adding `--ignore-scripts` to all of our Yarn invocations. The two main projects we're aware of that still use postinstall scripts are `fsevents` (which is optional, and whose absence didn't cause us any harm), and node-sass (which is currently working on [a WebAssembly port](https://github.com/sass/node-sass/issues/2011)).
 
-### B. cross-installs break the model
+### B. Cross-installs break the model
 
 Plug'n'Play relies on the fact that it knows the whole dependency tree. This causes issues when a package tries to require a file located in another entirely different part of the filesystem.
 
 The current implementation partially solves this by having a fallback on the regular Node resolution when files located outside of the dependency tree make require calls. Unfortunately, this doesn't work well with other projects that have themselves been installed using Plug'n'Play. We think this shouldn't happen under normal circumstances, and as a result have decided it wasn't blocking the proposal.
 
-### C. the package manager becomes the hub to run the project
+### C. The package manager becomes the hub to run the project
 
 This is more a philosophical issue than a technical one. In order to make it easier for users to work with Plug'n'Play, Yarn recommends calling scripts through `yarn run`, and running Javascript files using `yarn node` (both of which are commands that have been available for some time now). They both automatically insert the Plug'n'Play hook if needed, making the whole thing transparent to the user. As a downside, it also means that the package manager also becomes the preferred way to run scripts.
 
 The easiest solution would be for Node to implement native support for loading Plug'n'Play if detected. This is obviously not something that can be taken lightly, so this will only become viable once Plug'n'Play will have proven its value.
 
-### D. tools relying on crossing package boundaries in order to load their plugins need help
+### D. Tools relying on crossing package boundaries in order to load their plugins need help
 
 Some packages try to require packages they don't directly depend on for legit reasons. Most of those are trying to do this in order to reference plugins that their users declared in their configuration. Since they don't list those plugins in their dependencies (nor should they have to), Plug'n'Play is supposed to deny them access.
 
 In order to solve this, Plug'n'Play details a special case when a package makes a require call to a package it doesn't own but that the top-level has listed as one of its dependencies. In such a case, the require call will succeed, and the path that will be returned will be the exact same one as the one that would be obtained if the top-level package was making the call.
 
-### E. edit-in-place workflows need different tools
+### E. Edit-in-place workflows need different tools
 
 A quite common debug pattern is to manually edit the `node_modules` files in order to alter the behavior of the program and debug it more easily (by adding `console.log` statements, for example). Since the `node_modules` folders don't exist anymore, this isn't directly possible anymore.
 
@@ -224,7 +224,7 @@ In order to solve this use case, we've implemented the `yarn unplug` command tha
 
 ## 6. Future Work
 
-### A. require.resolve
+### A. `require.resolve`
 
 The `require.resolve` function is problematic in that it does two things in one:
 
@@ -238,7 +238,7 @@ A fix would be to split `require.resolve` in two:
 * `require.resolve.virtual`: would convert a request into an implementation-defined object ready for consumption by `require` and `require.resolve.physical`
 * `require.resolve.physical`: would convert a request (or one of the values returned by `require.resolve.virtual`) into a filesystem path
 
-### B. tarball unpacking
+### B. Tarball unpacking
 
 The classic Yarn installs copy files from the cache to the `node_modules` folder. The Plug'n'Play Yarn installs instead ensure that the cache becomes the one and single source of truth. But what if we were to go one step further? What if the Yarn offline mirror (this folder that contains the tarballs of each package found in the project, and used to populate the cache without querying the network) was this one and only source of truth? What if we didn't have to unpack them anymore?
 
@@ -248,7 +248,7 @@ Deployments would then only have to ship the `.pnp.js` file along with the offli
 
 ## 7. Annexes
 
-### A. generalized testsuite
+### A. Generalized testsuite
 
 In order to make it easier for everyone to experiment with different Plug'n'Play implementations, we've written a generalized testsuite that can be found [on the Yarn repository](https://github.com/yarnpkg/yarn/tree/master/packages/pkg-tests). It contains acceptance tests that validate the high-level behavior of the feature, and aren't tied to any specific implementation detail. While it's still a work-in-progress, we've invested in it a lot and hope it'll prove valuable to the community.
 
@@ -261,13 +261,16 @@ interface {
 
   VERSIONS: {std: 1, [extension]: number};
 
+  // Helper variable representing the top-level in the API
+  topLevel: {name: null, reference: null};
+
   findPackageLocator(path: string): {name: null, reference: null};
   findPackageLocator(path: string): {name: string, reference: string};
 
   getPackageInformation({name, reference}: {name: null, reference: null}): {packageLocation: string, packageDependencies: Map<string, string>, [key: string]: any};
   getPackageInformation({name, reference}: {name: string, reference: string}): {packageLocation: string, packageDependencies: Map<string, string>, [key: string]: any};
 
-  resolveToUnqualified(request: string, issuer: string): string;
+  resolveToUnqualified(request: string, issuer: string, {considerBuiltins?: boolean = true}): string;
   resolveUnqualified(unqualified: string, {extensions?: Array<string>}): string;
   resolveRequest(request: string, issuer: string): string;
 
@@ -276,7 +279,7 @@ interface {
 }
 ```
 
-### C. formal plug'n'play guarantees
+### C. Formal Plug'n'Play guarantees
 
 * A package **MUST** be able to get the value exported by the main entries of its dependencies using the `require` function, or through an import statement.
 * A package **MUST** be able to get the filesystem path to a file stored in one of its dependencies by using the `require.resolve` function.
@@ -290,7 +293,7 @@ interface {
 
 The comprehensive list of guarantees can also be extracted from the “it should” statements that can be found on the Plug'n'Play test suite.
 
-### D. daemon-mode communications
+### D. Daemon-mode communications
 
 The Plug'n'Play daemon communicates with the outside world by the mean of a very simple stdin / stdout loop. It doesn't spawn a server. The protocol is quite simple. In its most basic form, it's the following:
 
