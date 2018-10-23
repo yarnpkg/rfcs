@@ -60,6 +60,9 @@ team cares about the pinned versions inside of it and can deal with adding this 
 Upon running commands like `yarn remove` the package's comment would appear and if the
 the user still wants to delete it, it would also be deleted from `yarn.comments`.
 
+Warnings should aslo run if there is a version mismatch between `package.json` and
+`yarn.comments`.
+
 This file should be created by the user manually or as the result of choosing to do so
 in one of the steps of `yarn upgrade-interactive` (Where the default is not to use it).
 
