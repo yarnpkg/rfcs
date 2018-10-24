@@ -101,6 +101,9 @@ modified, but this can also be missed and not easy to maintain.
 
 # Unresolved questions
 
+Can we instead provide support to JSON5 which supports comments. I don't really understand the effects
+of this change.
+
 I considered to suggest to use `yarn.lock` for this at first but I want the user to
 be able to maintain it manually and to keep it noticeable.
 
