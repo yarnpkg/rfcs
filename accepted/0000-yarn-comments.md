@@ -99,10 +99,13 @@ I wanted to comment on, but it gets messy and package managers rearrange it.
 Another option would be to use "GIT" to keep track of commits where package.json got
 modified, but this can also be missed and not easy to maintain.
 
-# Unresolved questions
+We could also provide support for JSON5 which supports comments. But, first of all,
+many libraries and tools assume the'res `package.json` and that it is in a simple
+JSON format. Making them adopt to the new one is defenetly a long shot. Also-
+simply comments are weaker then this suggestion in terms of best practices like
+single point of truth.
 
-Can we instead provide support to JSON5 which supports comments. I don't really understand the effects
-of this change.
+# Unresolved questions
 
 I considered to suggest to use `yarn.lock` for this at first but I want the user to
 be able to maintain it manually and to keep it noticeable.
