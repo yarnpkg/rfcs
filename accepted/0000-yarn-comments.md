@@ -105,6 +105,14 @@ JSON format. Making them adopt to the new one is defenetly a long shot. Also-
 simply comments are weaker then this suggestion in terms of best practices like
 single point of truth.
 
+Adding a block to package.json- We might support this as well or instead of using
+`yarn.comments`.
+
+We can use a library to check version missmatches vs some file or vs a block in
+`package.json` upon running different `yarn` (or even npm) scripts. This looks like
+the fastest solution but it doesn't feel native. I want users to see the comments when
+they run `yarn upgrade-interactive` near the packages in question for example.
+
 # Unresolved questions
 
 I considered to suggest to use `yarn.lock` for this at first but I want the user to
