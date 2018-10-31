@@ -59,7 +59,6 @@ ignore-warnings:
     - name: "react-native"
       expected-by: "@artsy/palette"
       version: "*"
-}
 ```
 
 The `styled-components` dependency of the transitive `styled-reset` dependency,
@@ -73,7 +72,6 @@ ignore-warnings:
     - name: "styled-components"
       expected-by: "styled-reset"
       version: ">=4.0.0"
-}
 ```
 
 ----
@@ -115,10 +113,10 @@ Finally, at any given time all warnings should be visible by passing the
 
 Additionally, as is custom with build systems that allow control over how to
 treat warnings, an option can be introduced to treat warnings as errors. This
-means that rather than developers on a project will be unable to accidentally
-introduce new peer warnings, as installation will fail and they are forced to
-treat the new failure by either satisfying the peer dependency or making the
-determination that it should be ignore.
+means that developers on a project will be unable to accidentally introduce new
+peer warnings, as installation will fail and they are forced to treat the new
+failure by either satisfying the peer dependency or making the determination
+that it should be ignore.
 
 This should take the form of an additional `.yarnrc` entry to allow persistence
 of this project into SCM and distribution across all developers on the project.
