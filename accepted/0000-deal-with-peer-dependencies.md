@@ -171,6 +171,18 @@ clear that this is a project level concern, not a library one.
 The suggested format for the `ignore-warnings` list of the `.yarnrc` is YAML,
 yet the existing configuration doesn’t appear to be strictly YAML.
 
+----
+
+As this new configuration deviating from the previous simple format, per the
+above, does the ability to add entries to the `ignore-warnings` list need to be
+exposed in the CLI, or even an interactive prompt, to ease working with it?
+
+```
+$ yarn config ignore-warning <type> [--name <name> --expected-by <expected-by> --version <version requirements>]
+```
+
+----
+
 Should the `treat-warnings-as-errors` option also be exposed in the CLI? It
 seems like when somebody wants to one-off fix warnings they can just look at the
 output, whereas the point of this configuration is more to surface new warnings
