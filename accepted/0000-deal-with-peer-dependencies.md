@@ -171,7 +171,7 @@ yet the existing configuration doesn’t appear to be strictly YAML.
 
 ----
 
-As this new configuration deviating from the previous simple format, per the
+As this new configuration is deviating from the previous simple format, per the
 above, does the ability to add entries to the `ignore-warnings` list need to be
 exposed in the CLI, or even an interactive prompt, to ease working with it?
 
