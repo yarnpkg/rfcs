@@ -76,6 +76,8 @@ ignore-warnings:
 }
 ```
 
+----
+
 Afterwards, running `yarn install` shows no more warnings, until either:
 
 * any dependency introduces a _new_ peer dependency
@@ -109,6 +111,24 @@ warning "styled-reset" with ignored peer dependencies is no longer depended on.
 Finally, at any given time all warnings should be visible by passing the
 `--verbose` flag to `yarn install`.
 
+----
+
+Additionally, as is custom with build systems that allow control over how to
+treat warnings, an option can be introduced to treat warnings as errors. This
+means that rather than developers on a project will be unable to accidentally
+introduce new peer warnings, as installation will fail and they are forced to
+treat the new failure by either satisfying the peer dependency or making the
+determination that it should be ignore.
+
+This should take the form of an additional `.yarnrc` entry to allow persistence
+of this project into SCM and distribution across all developers on the project.
+
+```yaml
+treat-warnings-as-errors true
+ignore-warnings:
+  # ...
+```
+
 # How We Teach This
 
 This change is only additive and does not change any existing behavior of Yarn
@@ -116,7 +136,7 @@ or how developers are supposed to interact with it. The new terminology clearly
 communicates the intent and only introduces a negated version of existing
 terminology.
 
-Besides an entry being added to the [the `.yarnrc` documentation][yarnrc-docs],
+Besides entries being added to the [the `.yarnrc` documentation][yarnrc-docs],
 communication should also inlcude a blog post that explains the feature in a bit
 more detail and stresses how this is a way for a developer to gain control over
 their project’s dependency graph and ensure its stability.
@@ -150,6 +170,11 @@ clear that this is a project level concern, not a library one.
 
 The suggested format for the `ignore-warnings` list of the `.yarnrc` is YAML,
 yet the existing configuration doesn’t appear to be strictly YAML.
+
+Should the `treat-warnings-as-errors` option also be exposed in the CLI? It
+seems like when somebody wants to one-off fix warnings they can just look at the
+output, whereas the point of this configuration is more to surface new warnings
+in a continuous form.
 
 [npm-peer-deps]: https://docs.npmjs.com/files/package.json#peerdependencies
 [yarn-peer-deps]: https://yarnpkg.com/lang/en/docs/dependency-types/#toc-peerdependencies
