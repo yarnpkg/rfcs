@@ -4,9 +4,13 @@
 
 # Summary
 
-Allow a developer to deal with peer dependency warnings, without the need to
-install all dependencies, thus reducing warning fatigue and drawing attention to
-new warnings.
+Allow a project author to deal with peer dependency warnings, without the need
+to install all dependencies, thus reducing warning fatigue and drawing attention
+to new warnings.
+
+_Throughout the document the term ‘developer’ will be used to indicate a project
+author, i.e. the developer on a project that _consumes_ libraries vs a developer
+of a library._
 
 # Motivation
 
@@ -42,18 +46,19 @@ warning "@artsy/palette > styled-reset@1.4.0" has incorrect peer dependency "sty
 ```
 
 When the developer has determined that they do not want or cannot install these
-right now, they add these to the `ignoredPeerDependencies` list of their
-`package.json` manifest.
+right now, they add these to the `ignore-warnings > missing-peer-dependency`
+list of the _project’s_ `.yarnrc` configuration file.
 
 For instance, as the project the developer is working on is a web project, they
 want to always ignore a warning about the `react-native` peer dependency of
 `@artsy/palette`:
 
-```json
-{
-    "ignoredPeerDependencies": {
-        "@artsy/palette": ["react-native@*"]
-    }
+```yaml
+ignore-warnings:
+  missing-peer-dependency:
+    - name: "react-native"
+      expected-by: "@artsy/palette"
+      version: "*"
 }
 ```
 
@@ -62,11 +67,12 @@ however, is one that the developer cannot update to right now and so, _after_
 having verified that the version that they can use works for their use-case, the
 developer adds this warning to the ignore list:
 
-```json
-{
-    "ignoredPeerDependencies": {
-        "styled-reset": ["styled-components@>=4.0.0"]
-    }
+```yaml
+ignore-warnings:
+  missing-peer-dependency:
+    - name: "styled-components"
+      expected-by: "styled-reset"
+      version: ">=4.0.0"
 }
 ```
 
@@ -110,45 +116,41 @@ or how developers are supposed to interact with it. The new terminology clearly
 communicates the intent and only introduces a negated version of existing
 terminology.
 
-Its communication should follow that of Yarn’s
-[`resolutions` feature][yarn-resolutions], in that it is an extra way that a
-developer can gain control over their dependency graph and ensure its stability.
+Besides an entry being added to the [the `.yarnrc` documentation][yarnrc-docs],
+communication should also inlcude a blog post that explains the feature in a bit
+more detail and stresses how this is a way for a developer to gain control over
+their project’s dependency graph and ensure its stability.
 
 Links to its documentation could be added to the existing documentation on [peer
 dependencies][yarn-peer-deps], but otherwise does not need to be altered.
 
 # Drawbacks
 
-It’s one more configuration that needs to be documented and understood.
-
-An alternative that does not introduce a new `package.json` key could be
-preferable, but that does not appear to be feasible while maintaining
-compatibility with npm.
+It’s one more configuration that needs to be documented and understood. On the
+other hand, it is likely that the `ignore-warnings` project configuration will
+be expanded upon in the future, such as ignoring a missing license key in a
+dependency’s `package.json` file, and as such will be less of a niche
+configuration.
 
 # Alternatives
 
-Introducing a new version requirement negation operator, for example:
+A previous itertation of this RFC suggested the addition of a key to the
+`package.json` file instead, but moving this out to the `.yarnrc` file made it
+clear that this is a project level concern, not a library one.
 
 ```json
 {
-    "peerDependencies": {
-        "styled-reset": "styled-components@!4.0.0"
+    "ignoredPeerDependencies": {
+        "@artsy/palette": ["react-native@*"]
     }
 }
 ```
 
-However, this breaks compatibility with npm and, more importantly, doesn’t allow
-for multiple peer dependencies of the (transitive) dependency to be ignored.
-
 # Unresolved questions
 
-I don’t feel strongly about the configuration, except that I dislike more
-configuration. Any suggestions that could lead to the same outcome with less
-new configuration would be greatly preferred.
-
-Perhaps the alternative design listed above could piggy-back on the
-[`resolutions` key][yarn-resolutions]?
+The suggested format for the `ignore-warnings` list of the `.yarnrc` is YAML,
+yet the existing configuration doesn’t appear to be strictly YAML.
 
 [npm-peer-deps]: https://docs.npmjs.com/files/package.json#peerdependencies
 [yarn-peer-deps]: https://yarnpkg.com/lang/en/docs/dependency-types/#toc-peerdependencies
-[yarn-resolutions]: https://yarnpkg.com/lang/en/docs/selective-version-resolutions/
+[yarnrc-docs]: https://yarnpkg.com/lang/en/docs/yarnrc/
