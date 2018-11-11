@@ -76,6 +76,7 @@ Point (3) is significant, and should be highly weighted.
 Here's some prior art that this RFC takes inspiration from:
 
 - https://pgctl.readthedocs.io/en/latest/
+- https://github.com/Homebrew/homebrew-services
 - http://pm2.keymetrics.io/docs/usage/quick-start/
 - http://supervisord.org/
 - https://circus.readthedocs.io/en/latest/
