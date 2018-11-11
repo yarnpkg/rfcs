@@ -96,7 +96,7 @@ Nice to have:
 
 ## API Design
 
-We will expose a new subcommand, `yarn pg` to allow developers to interact with their background scripts.
+We will expose a new subcommand, `yarn bg` to allow developers to interact with their background scripts.
 
 ### Starting/Stoping/Restarting background scripts
 
@@ -136,7 +136,7 @@ There are a few options:
 
    Notes:
 
-   - Would require developers to add a new line `.gitignore` (prior art: node_modules)
+   - Would require developers to add a new line to `.gitignore` (prior art: .yarnrc)
 
 2. Storing in a `node_modules/.yarn-background-scripts` directory, relative to the current working directory of the repo
 
