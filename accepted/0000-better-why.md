@@ -60,7 +60,7 @@ the dependency chain.
 
 `>>> yarn why pseudomap 1.0.2`
 
-### outpout
+### output
 
 ```
 pseudomap@^1.0.1 (1.0.2)
