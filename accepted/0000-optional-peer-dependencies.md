@@ -15,19 +15,15 @@ While it currently already works, it causes semantical issues: are peer dependen
 
 ## 2. Detailed Design
 
-Yarn will introduce a new protocol, `optional:`. If a peer dependency cannot be found but the requested range begins with `optional:` then Yarn will silence any warning and assume that the package will check at runtime whether it should use it or not.
-
-**Important:** The `optional:` protocol will not be valid in anything else than peer dependencies. We reserve the right later to potentially implement it for other fields, but for the time being we're only interested in the `peerDependencies` use case.
+Yarn will introduce a new field, `peerDependenciesMeta`. This field will be a dictionary that will allow adding metadata to the peer dependencies. As a first step, we'll only add the `optional` metadata field.
 
 ## 3. How We Teach This
 
-- We can just call the optional protocol.
-
-- Being stricly backward compatible, it doesn't require us to push changes onto our users, so the teaching should be simple and spread on the long time.
+- Being stricly backward compatible it doesn't require us to push changes onto our users, so the teaching should be simple and spread on the long time.
 
 ## 4. Drawbacks
 
-- It requires adoption from other package managers, otherwise there's a risk to fracture the ecosystem if they decide to go with (for example) naming the field `opt:`.
+- It requires adoption from other package managers, otherwise there's a risk to fracture the ecosystem if they decide to go with (for example) naming the field `peerDependenciesSettings`.
 
 ## 5. Alternatives
 
@@ -41,12 +37,12 @@ Yarn will introduce a new protocol, `optional:`. If a peer dependency cannot be 
 
   - It would have a completely different meaning from the already existing `optionalDependencies` field.
 
+- We could add an `optional:` protocol
+
+  - It's been noted it could potentially cause issues on older package managers.
+
 - We could overhaul how the dependencies are defined, and fix them once and for all.
 
   - This sounds a huge undertaking for a problem relatively minor at the moment.
 
   - It seems unlikely we can reach a consensus in a reasonable timeframe.
-
-## 6. Unresolved Questions
-
-Will all the package managers work properly when seeing a `peerDependencies` range prefixed by `optional:`? Logic would say that yes, since peer dependency ranges are typically an hint rather than a strict enforcement (except maybe for npm 1 & 2), but it might trigger a bug in some versions of some package managers.
