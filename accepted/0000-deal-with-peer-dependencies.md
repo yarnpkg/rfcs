@@ -152,7 +152,7 @@ configuration.
 
 # Alternatives
 
-A previous itertation of this RFC suggested the addition of a key to the
+A previous iteration of this RFC suggested the addition of a key to the
 `package.json` file instead, but moving this out to the `.yarnrc` file made it
 clear that this is a project level concern, not a library one.
 
