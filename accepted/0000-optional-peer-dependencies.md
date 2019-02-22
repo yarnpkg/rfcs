@@ -17,6 +17,19 @@ While it currently already works, it causes semantical issues: are peer dependen
 
 Yarn will introduce a new field, `peerDependenciesMeta`. This field will be a dictionary that will allow adding metadata to the peer dependencies. As a first step, we'll only add the `optional` metadata field.
 
+```json
+{
+  "peerDependencies": {
+    "lodash": "*"
+  },
+  "peerDependenciesMeta": {
+    "lodash": {
+      "optional": true
+    }
+  }
+}
+```
+
 ## 3. How We Teach This
 
 - Being stricly backward compatible it doesn't require us to push changes onto our users, so the teaching should be simple and spread on the long time.
