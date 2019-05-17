@@ -112,6 +112,8 @@ This feature can be introduced via documentation as an optional alternative to i
 
 # Alternatives
 
+We could specify the import filename in a reserved script key instead of using the scripts field.  See the unresolved questions section for an example of this implementation.  This solution has the added benefit of being able to use the default script definitions in conjuction with the imported list.
+
 Similar functionality has already been implemented in the [nps library](https://github.com/kentcdodds/nps). While this package is useful, it requires using a separate cli for running scripts, or duplicating script aliases in packages.json to point to nps.  
 
 For the minimum amount of effort required, I think this feature should be implemented directly in yarn allowing users to execute scripts with the cli they are comfortable using.
@@ -120,4 +122,14 @@ Other designs for adding comments to scripts include putting the information in 
 
 # Unresolved questions
 
-See item #4 under drawbacks
+See item #4 under drawbacks.  If this drawback turns out to be an issue, we could specify the import script filename via a reserved 'import' script key instead: 
+
+    "scripts": {
+      "import": "package-scripts.js",
+      "test": "cross-env CI=1 react-scripts test --env=jsdom",
+      "test:watch": "react-scripts test --env=jsdom",
+      "build": "rollup -c",
+      "start": "rollup -c -w"
+    }
+
+
