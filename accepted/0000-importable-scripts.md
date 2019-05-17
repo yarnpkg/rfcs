@@ -46,7 +46,7 @@ For defining scripts, the following structures are proposed:
 2.  Structure a script as an object with a 'script' key.  This allows for additional
     metadata, other than comments, to be co-located with an associated script. When a 
     script key is specified within an object, the object's remaining non object values 
-    are ignored.  Remaining objects are imported imported as normal.
+    are ignored.  Remaining objects are imported as normal.
 
         module.exports = {
           scripts: {
@@ -94,11 +94,11 @@ Checks and warnings will be put in place during script imports to flag any dupli
 # How We Teach This
 
 I think 'importable scripts' accurately describes and portrays this feature.  It should be presented as a simple alternative to the current script structure, with the ability of organization and comments.  It is somewhat similar to other package.json field patterns 
-which list filenames as their value.  The module structure is fairly similar, if not the same, as nps: https://github.com/kentcdodds/nps.
+which list filenames as their value.  The module structure is similar to [nps](https://github.com/kentcdodds/nps).
 
-If accepted, the Yarn documentation would need to be updated to include the alternative packages.json option as well as outline the implemented module structures as defined above. As it is a more advanced and optional feature, it will not affect how yarn is currently used or taught.
+If accepted, the Yarn documentation would need to be updated to include the alternative packages.json option as well as outline the implemented module structures as defined above. As this is a more advanced and optional feature, it will not affect how yarn is currently used or taught.
 
-This feature can be simply introduced via documentation as an optional alternative to specifying scripts within the package.json file.  User's will organically learn the feature as the need for it arises.
+This feature can be introduced via documentation as an optional alternative to including scripts within the package.json file.  User's will organically learn the feature as their needs arise.
 
 # Drawbacks
 
@@ -107,13 +107,12 @@ This feature can be simply introduced via documentation as an optional alternati
     how to implement the more advanced structures.
 3.  More time needed to create documentation.
 4.  As the package.json script field will now be used to specify a filename, we need to determine
-    if this will have any effect on other libraries or tools.  One thing I noticed is that VS Code
-    does highlight that it as an 'Incorrect type. Expected Object'.  None of my other tools seem to
-    complain.
+    if this will have any effect on other libraries or tools.  One thing I noted is that VS Code
+    does highlight this field with an 'Incorrect type. Expected Object' warning when a filename is specified.      
 
 # Alternatives
 
-Similar functionality has already been implemented here: https://github.com/kentcdodds/nps. While this package is useful, it requires using a separate cli for running scripts, or duplicating script aliases in packages.json to point to nps.  
+Similar functionality has already been implemented in the [nps library](https://github.com/kentcdodds/nps). While this package is useful, it requires using a separate cli for running scripts, or duplicating script aliases in packages.json to point to nps.  
 
 For the minimum amount of effort required, I think this feature should be implemented directly in yarn allowing users to execute scripts with the cli they are comfortable using.
 
