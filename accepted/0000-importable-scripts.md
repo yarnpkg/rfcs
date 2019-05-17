@@ -8,7 +8,7 @@ Allow scripts to be imported from a file as an alternative to the standard objec
 
 # Motivation
 
-The main motivation behind this is to allow scripts to be better organized and documented in one place.  This can be useful for large projects with numerous scripts.  It is also helpful for simplifying auto-generated documentation and organizing scripts with comments or associated metadata. This is not possible with the current package.json structure.  If implemented, this feature allows the following:
+The main motivation behind this is to better organize and document scripts in one place.  This is useful for projects with numerous scripts.  It is also helpful for simplifying auto-generated documentation and organizing scripts with comments or associated metadata. This is not possible with the current package.json structure.  If implemented, this feature allows the following:
 
     1. Ability to write comments next to an associated script.
     2. Ability to include metadata with an associated script.
