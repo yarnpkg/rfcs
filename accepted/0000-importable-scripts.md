@@ -103,12 +103,10 @@ This feature can be introduced via documentation as an optional alternative to i
 # Drawbacks
 
 1.  Increase binary size.  However small, there will be a slight increase in the binary size.
-2.  There will probably be some additional overhead for people having issues or understanding 
-    how to implement the more advanced structures.
+2.  There will probably be some additional overhead for people having issues or understanding how to implement the more advanced structures.
 3.  More time needed to create documentation.
-4.  As the package.json script field will now be used to specify a filename, we need to determine
-    if this will have any effect on other libraries or tools.  One thing I noted is that VS Code
-    does highlight this field with an 'Incorrect type. Expected Object' warning when a filename is specified.      
+4.  As the package.json script field will now be used to specify a filename, we need to determine if this will have any effect on other libraries or tools.  One thing I noted is that VS Code does highlight this field with an 'Incorrect type. Expected Object' warning when a filename is specified.
+5.  When the file input is used, the scripts cannot be determined statically.  The scripts must be determined by loading and executing javascript.
 
 # Alternatives
 
