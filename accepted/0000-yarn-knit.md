@@ -8,7 +8,7 @@ This is a proposal to improve upon `yarn link` so that developers can more accur
 
 # Motivation
 
-`yarn link` (and `npm link`) before it have several problems when working on code bases of non-trivial sizes, especially with multiple apps. The current `link` command doesn't isolate `node_modules` between apps (especially problematic with the advent of Electron), it doesn't allow for working on multiple versions of a library, and it produces a `node_modules` hierarchy that is not faithful to the one produced after the library is published.
+`yarn link` (and `npm link` before it) have several problems when working on code bases of non-trivial sizes, especially with multiple apps. The current `link` command doesn't isolate `node_modules` between apps (especially problematic with the advent of Electron), it doesn't allow for working on multiple versions of a library, and it produces a `node_modules` hierarchy that is not faithful to the one produced after the library is published.
 
 # Detailed design
 
