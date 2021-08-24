@@ -162,8 +162,8 @@ With:
   }
 ```
 
-`package-a` will still be resolved to `1.0.0`, but `package-c` will have
-`package-a@3.0.0` in its own `node_modules`.
+`package-a` will still be resolved to `3.0.0`, but `package-c` will have
+`package-a@2.0.0` in its own `node_modules`.
 
 With:
 ```json
